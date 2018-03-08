@@ -5,12 +5,20 @@
   <meta charset="UTF-8">
   <link rel="stylesheet" type="text/css" href="index.css" />
 </head>
+
 <body>
- <br>
- <br>
+  <br>
+  <br>
   <img src="giphy.gif" alt="img cant be loaded" class="draggable-area">
-  <div hidden></div>
+  <div class="msg-bubble" id="msg-bubble" hidden>
+    <div id="msg"></div><br>
+    <div id="options" hidden>
+      <button id="snz">Snooze</button>&nbsp;&nbsp;
+      <button id="ans">Answer</button>
+    </div>
+  </div>
   <script src="http://localhost:2018/socket.io/socket.io.js"></script>
   <script src='service.js'></script>
 </body>
+
 </html>

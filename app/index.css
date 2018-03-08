@@ -8,10 +8,11 @@ html::-webkit-scrollbar {
   }
 .draggable-area {
   -webkit-app-region: drag;
+  z-index: -1;
 }
-div {
+.msg-bubble{
     position: absolute;
-    height: 50px;
+    min-height: 50px;
     min-width: 100px;
     text-align: center;
     line-height: 50px;
@@ -23,11 +24,11 @@ div {
     -webkit-box-shadow: 2px 2px 4px #888;
     -moz-box-shadow: 2px 2px 4px #888;
     box-shadow: 2px 2px 4px #888;  
-    left: 150px;
+    left: 300px;
     top:10px;
     padding: 5px;
 }
-div:before {
+/* .msg-bubble:before {
     content: ' ';
     position: absolute;
     width: 0;
@@ -37,7 +38,7 @@ div:before {
     border: 15px solid;
     border-color: #666 transparent transparent #666;
   }
-div:after {
+  .msg-bubble:after {
     content: ' ';
     position: absolute;
     width: 0;
@@ -46,4 +47,4 @@ div:after {
     top: 60px;
     border: 11px solid;
     border-color: #fff transparent transparent #fff;
-}  
+}   */
