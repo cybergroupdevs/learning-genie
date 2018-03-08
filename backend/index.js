@@ -3,23 +3,26 @@ const express=require('express')
 const socketIo=require('socket.io');
 const http=require('http');
 const cors = require('cors');
-
+const bodyParser = require('body-parser');
+const _ = require('lodash');
 
 const app =express();
 app.use(cors());
-let sock;
-let server=http.createServer(app);
+app.use(bodyParser.json());
+let server=http.createServer(app).listen(2018,(port)=>{
+    console.log('app live on port 2018');
+});
 let io=socketIo(server);
 io.on('connection',(socket)=>{
     console.log(socket.client.id)
-    sock=socket;
+  
 })
 app.get('/',(req,res)=>{
     res.send('hello there')
-    sock.broadcoast.emit('newQuestion',{ques:"abc"});
+})
+app.post('/',(req,res)=>{
+    let ques = _.pick(req.body, ['ques']);
+    res.send("Question posted");
+    io.emit('newQuestion',ques);
 })
 
-
-app.listen(2018,(port)=>{
-    console.log('app live on port 2018');
-});

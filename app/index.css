@@ -12,6 +12,7 @@ html::-webkit-scrollbar {
 div {
     position: absolute;
     height: 50px;
+    min-width: 100px;
     text-align: center;
     line-height: 50px;
     background-color: #fff;

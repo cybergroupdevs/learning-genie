@@ -1,6 +1,5 @@
-const axios=require('axios')
-const io = require('socket.io-client');
-const socket=io('https://localhost:2018');
+
+const socket=io('http://localhost:2018');
 console.log("calling api");
 let msgs = document.querySelector('div');
 // axios.get('http://localhost:3000/users').then( (res) => {
