@@ -1,0 +1,17 @@
+{
+  "name": "learning-genie",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "electron index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "electron": "^1.8.2",
+    "socket.io": "^2.0.4"
+  }
+}

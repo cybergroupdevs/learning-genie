@@ -19,7 +19,7 @@ function createWindow() {
   // Create the browser window.
   win = new BrowserWindow({
     frame: false,
-    width: 300,
+    width: 400,
     transparent: true,
     height: 300,
     alwaysOnTop: true,
@@ -32,6 +32,16 @@ function createWindow() {
     skipTaskbar: true,
     title: ''
   });
+  // win.webContents.executeJavaScript(`
+  // const axios = require('axios')
+  // let msgs = document.querySelector('div');
+  // axios.get('http://localhost:3000/users').then( (res) => {
+  //   console.log(JSON.stringify(res));
+  //   msgs.innerHTML=res;
+  //  })
+  // `, function (result) {
+  //   console.log(result)
+  // })
   // and load the index.html of the app.
   win.loadURL(url.format({
     pathname: path.join(__dirname, 'index.html'),
