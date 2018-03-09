@@ -13,6 +13,7 @@ const answer = document.getElementById('ans');
 const currentWin=remote.BrowserWindow.getFocusedWindow();
 let ques;
 socket.on('newQuestion', (res) => {
+  currentWin.width=500;
   msgs.hidden = false;
   msgtxt.innerHTML = "got a new msg";
   setTimeout(() => {
@@ -51,7 +52,7 @@ snooze.addEventListener('click', (event) => {
 answer.addEventListener('click', (event) => {
   console.log("ans btn clicked");
   const modalPath = path.join(__dirname, 'answer.html')
-  let win = new BrowserWindow({ width: 400, height: 200,frame:false,alwaysOnTop:true })
+  let win = new BrowserWindow({ width: 200, height: 200,frame:false,alwaysOnTop:true })
   win.on('close', function () { win = null })
   win.loadURL(modalPath)
   win.show()
