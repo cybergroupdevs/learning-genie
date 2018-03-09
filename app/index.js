@@ -20,7 +20,7 @@ function createWindow() {
     frame: false,
     width: 600,
     transparent: true,
-    height: 600,
+    height: 325,
     alwaysOnTop: true,
     toolbar: false,
     titleBarStyle: 'hidden',

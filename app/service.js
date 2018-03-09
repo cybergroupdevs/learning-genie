@@ -24,20 +24,20 @@ socket.on('newQuestion', (res) => {
 
 snooze.addEventListener('click', (event) => {
   var pos=currentWin.getPosition();
-  if((pos[0]<screen.width-600) || (pos[1]<screen.height-600)){
+  if((pos[0]<screen.width-600) && (pos[1]<screen.height-325)){
     pos[0]=screen.width-600;
     pos[1]=0;
   }
-  else if((pos[0]>=screen.width-600) || (pos[1]<screen.height-600)){
+  else if((pos[0]>=screen.width-600) && (pos[1]<screen.height-325)){
     pos[0]=screen.width-600;
-    pos[1]=screen.height-600;
+    pos[1]=screen.height-325;
   }
-  else if((pos[0]>=screen.width-600) || (pos[1]>=screen.height-600)){
+  else if((pos[0]>=screen.width-600) && (pos[1]>=screen.height-325)){
     pos[0]=0;
-    pos[1]=screen.height-600;
+    pos[1]=screen.height-325;
   }
-  else if((pos[0]<screen.width-600) || (pos[1]>=screen.height-600)){
-    pos[0]=screen.width-600;
+  else if((pos[0]<screen.width-600) && (pos[1]>=screen.height-325)){
+    pos[0]=0;
     pos[1]=0;
   }
   console.log("snz btn clicked")
