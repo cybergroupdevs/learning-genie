@@ -12,8 +12,14 @@ const snooze = document.getElementById('snz');
 const answer = document.getElementById('ans');
 const currentWin=remote.BrowserWindow.getFocusedWindow();
 let ques;
+socket.on('connect',()=>{console.log("connected to server")})
 socket.on('newQuestion', (res) => {
-  currentWin.width=500;
+  try{
+  currentWin.setSize(500,325,true)
+  }
+  catch(e) {
+    console.log(e)
+  }
   msgs.hidden = false;
   msgtxt.innerHTML = "got a new msg";
   setTimeout(() => {

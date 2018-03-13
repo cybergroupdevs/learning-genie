@@ -7,27 +7,96 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const _ = require('lodash');
 const { ObjectId } = require('mongodb');
-const {Answer}=require('./models/Answer')
+var session = require('express-session');
 
+const {Answer}=require('./models/Answer')
 const { mongoose } = require('./models/db');
 const { Question } = require('./models/Questions')
+const authHelper=require('./authHelper')
+const app = express();
+app.use(session(
+    { secret: '0dc529ba-5051-4cd6-8b67-c9a901bb8bdf',
+      resave: false,
+      saveUninitialized: false 
+    }));
 
 const port = process.env.PORT;
-const app = express();
+
 app.use(cors());
 app.use(bodyParser.json());
+    
 let server = http.createServer(app).listen(port, (p) => {
     console.log(`app live on ${port}`);
 });
+
 let io = socketIo(server);
 io.on('connection', (socket) => {
     console.log(socket.client.id)
 
 })
+app.get('/login',(req,res)=>{
+    res.redirect(`${authHelper.getAuthUri()}`);
+})
+app.get('/authorize', function(req, res) {
+    var authCode = req.query.code;
+    if (authCode) {
+      console.log('');
+      console.log('Retrieved auth code in /authorize: ' + authCode);
+      authHelper.getTokenFromCode(authCode, tokenReceived, req, res);
+    }
+    else {
+      // redirect to home
+      console.log('/authorize called without a code parameter, redirecting to login');
+      res.redirect('/login');
+    }
+  });
+  function tokenReceived(req, res, error, token) {
+    if (error) {
+      console.log('ERROR getting token:'  + error);
+      res.send('ERROR getting token: ' + error);
+    }
+    else {
+      // save tokens in session
+      req.session.access_token = token.token.access_token;
+      req.session.refresh_token = token.token.refresh_token;
+      req.session.email = authHelper.getEmailFromIdToken(token.token.id_token);
+      res.redirect('/logincomplete');
+    }
+  }
+  
+  app.get('/logincomplete', function(req, res) {
+    var access_token = req.session.access_token;
+    var refresh_token = req.session.access_token;
+    var email = req.session.email;
+    
+    if (access_token === undefined || refresh_token === undefined) {
+      console.log('/logincomplete called while not logged in');
+      res.redirect('/');
+      return;
+    }
+    
+    res.send(email);
+  });
+  
+  app.get('/refreshtokens', function(req, res) {
+    var refresh_token = req.session.refresh_token;
+    if (refresh_token === undefined) {
+      console.log('no refresh token in session');
+      res.redirect('/');
+    }
+    else {
+      authHelper.getTokenFromRefreshToken(refresh_token, tokenReceived, req, res);
+    }
+  });
+  
+  app.get('/logout', function(req, res) {
+    req.session.destroy();
+    res.redirect('/');
+  });
 app.get('/', (req, res) => {
     res.send('hello there')
 })
-app.post('/', (req, res) => {
+app.post('/question', (req, res) => {
     let body = _.pick(req.body, ['ques', 'team']);
     body.atTime = new Date().getTime();
     let question = new Question(body)
@@ -38,11 +107,10 @@ app.post('/', (req, res) => {
         }
         else{
             res.send("Question posted");
-            io.emit('newQuestion', question);
+            console.log('question emitted')
+            io.emit('newQuestion',question);
         }
     })
-  
-  
 })
 app.post('/answer', (req, res) => {
     let body = _.pick(req.body, ['q_id','ans','u_id']);
