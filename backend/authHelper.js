@@ -1,21 +1,17 @@
 var clientId = '00466414-78cb-46f9-a8f7-3a366b52293e';
 var clientSecret = 'bqmqRFH6239%-jwyCSQL8!$';
 var redirectUri = 'http://localhost:2018/authorize';
-var scopes = [
-    'openid',
-    'profile',
-    'offline_access'
-];
+var scopes = ['openid','profile','offline_access'];
 
 var credentials = {
     client: {
         id: clientId,
-        secret: clientSecret
+        secret: clientSecret,
     },
     auth: {
         tokenHost: 'https://login.microsoftonline.com',
         authorizePath: 'common/oauth2/authorize',
-        tokenPath: 'common/oauth2/v2.0/token'
+        tokenPath: 'common/oauth2/token'
     }
 };
 var oauth2 = require('simple-oauth2').create(credentials)
@@ -32,11 +28,11 @@ module.exports = {
     getTokenFromCode: (auth_code, callback, request, response)=> {
         oauth2.authorizationCode.getToken({
             code: auth_code,
-            redirect_uri: redirectUri
+            redirect_uri: redirectUri,
+            scope: scopes
         },(error, result)=> {
-            debugger;
             if (error) {
-                console.log('Access token error: ', JSON.stringify(error,null,2));
+                console.log('Access token error: ', error.message);
                 callback(request, response, error, null);
             }
             else {
@@ -48,6 +44,7 @@ module.exports = {
     },
 
     getEmailFromIdToken: function (id_token) {
+        debugger;
         // JWT is in three parts, separated by a '.'
         var token_parts = id_token.split('.');
 
@@ -57,9 +54,10 @@ module.exports = {
         var decoded_token = encoded_token.toString();
 
         var jwt = JSON.parse(decoded_token);
+        console.log(jwt);
 
         // Email is in the preferred_username field
-        return jwt.preferred_username
+        return jwt.unique_name
     },
 
     getTokenFromRefreshToken: function (refresh_token, callback, request, response) {

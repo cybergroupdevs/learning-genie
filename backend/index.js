@@ -57,10 +57,10 @@ app.get('/authorize', function(req, res) {
     }
     else {
       // save tokens in session
-      req.session.access_token = token.token.access_token;
+      req.session.idtoken = token.token.id_token;
       req.session.refresh_token = token.token.refresh_token;
       req.session.email = authHelper.getEmailFromIdToken(token.token.id_token);
-      res.redirect('/logincomplete');
+    res.redirect('/logincomplete')
     }
   }
   
@@ -74,9 +74,23 @@ app.get('/authorize', function(req, res) {
       res.redirect('/');
       return;
     }
-    
-    res.send(email);
+    console.log(email);
+    res.send(`${email} you are successfully logged in`);
   });
+  
+  app.get('/getuser',(req,res)=>{
+      if(req.session.access_token)
+      {
+        res.send({
+            token: req.session.idtoken,
+            email: req.session.email
+        })
+      }
+      else {
+          res.status(404).send("user not found")
+      }
+
+  })
   
   app.get('/refreshtokens', function(req, res) {
     var refresh_token = req.session.refresh_token;
