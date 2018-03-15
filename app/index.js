@@ -1,8 +1,9 @@
 const electron = require('electron')
 const axios = require('axios')
 const path = require('path')
+const fs = require('fs')
 const url = require('url')
-// Module to control application life.
+
 
 const app = electron.app
 
@@ -30,10 +31,10 @@ function createWindow() {
     simpleFullscreen: false,
     skipTaskbar: true,
     title: '',
-    x:0,
-    y:0
+    x: 0,
+    y: 0
   });
- 
+
   win.loadURL(url.format({
     pathname: path.join(__dirname, 'index.html'),
     protocol: 'file:',

@@ -1,6 +1,14 @@
 const electron = require('electron');
 const path = require('path');
+const axios = require('axios')
 const $ = require('jquery')
+const Store = require('./store')
+const store = new Store({
+  configName: 'user-data',
+  defaults: {
+
+  }
+});
 const BrowserWindow = electron.remote.BrowserWindow;
 const socket = io('http://localhost:2018');
 const { remote } = require('electron')
@@ -12,7 +20,28 @@ const snooze = document.getElementById('snz');
 const answer = document.getElementById('ans');
 const currentWin=remote.BrowserWindow.getFocusedWindow();
 let ques;
-socket.on('connect',()=>{console.log("connected to server")})
+let token;
+socket.on('connect',()=>{
+  console.log("connected to server")
+  if (!store.get('token')) {
+    console.log('no token found')
+    let win = new BrowserWindow({ width: 800, height: 500,autoHideMenuBar:true,alwaysOnTop:true })
+    win.on('close', function () { 
+      axios.get('http://localhost:2018/getuser').then((data)=>{
+        alert(JSON.stringify(data.data.token))
+        store.set('token',JSON.stringify(data.data.token))
+        token= JSON.stringify(data.data.token);
+      }).catch((e)=>{
+        alert(e.message)
+        currentWin.close();
+      })
+      win = null
+     })
+    win.loadURL('http://localhost:2018/login')
+    win.show()
+  }
+  else { token=store.get.get('token')}
+})
 socket.on('newQuestion', (res) => {
   try{
   currentWin.setSize(500,325,true)

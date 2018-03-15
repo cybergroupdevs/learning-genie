@@ -12,6 +12,7 @@ var session = require('express-session');
 const {Answer}=require('./models/Answer')
 const { mongoose } = require('./models/db');
 const { Question } = require('./models/Questions')
+const { User } = require('./models/User')
 const authHelper=require('./authHelper')
 const app = express();
 app.use(session(
@@ -24,7 +25,7 @@ const port = process.env.PORT;
 
 app.use(cors());
 app.use(bodyParser.json());
-    
+let founduser;
 let server = http.createServer(app).listen(port, (p) => {
     console.log(`app live on ${port}`);
 });
@@ -57,25 +58,33 @@ app.get('/authorize', function(req, res) {
     }
     else {
       // save tokens in session
-      req.session.idtoken = token.token.id_token;
-      req.session.refresh_token = token.token.refresh_token;
       req.session.email = authHelper.getEmailFromIdToken(token.token.id_token);
+      if(User.find({email: req.session.email}.then(user=>{ founduser=user}))){
+        req.session.idtoken=founduser.token;
+      }
+      else {
+      req.session.idtoken = token.token.id_token;
+      }
+      let user = new User({
+        token: req.session.idtoken,
+        email: req.session.email
+    })
+    user.save().then((user)=>{}).catch(e=>console.log(e))
     res.redirect('/logincomplete')
     }
   }
   
   app.get('/logincomplete', function(req, res) {
-    var access_token = req.session.access_token;
-    var refresh_token = req.session.access_token;
+    var idtoken = req.session.access_token;
     var email = req.session.email;
     
-    if (access_token === undefined || refresh_token === undefined) {
+    if (idtoken === undefined || email === undefined) {
       console.log('/logincomplete called while not logged in');
-      res.redirect('/');
+      res.redirect('/login');
       return;
     }
     console.log(email);
-    res.send(`${email} you are successfully logged in`);
+    res.send(`${email } you are successfully logged in`);
   });
   
   app.get('/getuser',(req,res)=>{
@@ -108,7 +117,7 @@ app.get('/authorize', function(req, res) {
     res.redirect('/');
   });
 app.get('/', (req, res) => {
-    res.send('hello there')
+    res.send('Welcome to learning Genie')
 })
 app.post('/question', (req, res) => {
     let body = _.pick(req.body, ['ques', 'team']);
@@ -127,7 +136,8 @@ app.post('/question', (req, res) => {
     })
 })
 app.post('/answer', (req, res) => {
-    let body = _.pick(req.body, ['q_id','ans','u_id']);
+    let token=req.headers.auth
+    let body = _.pick(req.body, ['q_id','ans']);
     body.atTime = new Date().getTime();
     let answer=new Answer(body);
     answer.save().then((ans)=>{
