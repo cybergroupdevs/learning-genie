@@ -1,6 +1,6 @@
 require('../config/config');
 const mongoose=require('mongoose');
-mongoose.promise=global.promise;
+mongoose.promise= require('bluebird');
 
 mongoose.connect(process.env.MONGODB_URI).catch((e)=>console.log(e));
 

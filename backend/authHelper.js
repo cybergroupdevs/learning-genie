@@ -44,7 +44,6 @@ module.exports = {
     },
 
     getEmailFromIdToken: function (id_token) {
-        debugger;
         // JWT is in three parts, separated by a '.'
         var token_parts = id_token.split('.');
 
