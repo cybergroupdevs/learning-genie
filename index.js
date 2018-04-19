@@ -38,7 +38,11 @@ let server = http.createServer(app).listen(port, (p) => {
 });
 
 let io = socketIo(server);
-let redisstore =redis.createClient(process.env.Redis_opts)
+let redisstore =redis.createClient({
+    host:"redis-19917.c12.us-east-1-4.ec2.cloud.redislabs.com",
+    port:19917,
+    password:"ToC1WFgyqdAn0UHM9T1XXkM3w4n3irp9"
+})
 io.on('connection', (socket) => {
     console.log(socket.client.id)
     redisstore.set('clientId', socket.client.id)
