@@ -1,4 +1,4 @@
-var env = process.env.NODE_ENV || 'development'
+var env = process.env.NODE_ENV || 'production'
 console.log("***env:", env)
 
 if (env === 'development') {
@@ -14,6 +14,7 @@ else if (env === 'production') {
     process.env.Redis_opts={
         host:"redis-19917.c12.us-east-1-4.ec2.cloud.redislabs.com",
         port:19917,
-        password:"ToC1WFgyqdAn0UHM9T1XXkM3w4n3irp9"}
+        password:"ToC1WFgyqdAn0UHM9T1XXkM3w4n3irp9"
+    }
 }
 
