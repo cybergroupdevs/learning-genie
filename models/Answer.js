@@ -1,10 +1,9 @@
 const mongoose=require('mongoose');
 var AnswerSchema = new mongoose.Schema({
-    ans :{
+    ans:{
         type: String,
         required: true,
-        minlength:1,
-        unique: true,
+        minlength: 1,
         trim: true
     },
     q_id:{

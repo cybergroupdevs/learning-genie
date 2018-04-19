@@ -21,10 +21,8 @@ module.exports = {
             redirect_uri: redirectUri,
             scope: scopes
         });
-        console.log('Generated auth Uri: ' + returnVal);
         return returnVal;
     },
-
     getTokenFromCode: (auth_code, callback, request, response)=> {
         oauth2.authorizationCode.getToken({
             code: auth_code,
@@ -37,14 +35,12 @@ module.exports = {
             }
             else {
                 var token = oauth2.accessToken.create(result);
-                console.log('Token created: ', token.token);
                 callback(request, response, null, token);
             }
         });
     },
 
     getEmailFromIdToken: function (id_token) {
-        debugger;
         // JWT is in three parts, separated by a '.'
         var token_parts = id_token.split('.');
 
@@ -54,8 +50,6 @@ module.exports = {
         var decoded_token = encoded_token.toString();
 
         var jwt = JSON.parse(decoded_token);
-        console.log(jwt);
-
         // Email is in the preferred_username field
         return jwt.unique_name
     },
