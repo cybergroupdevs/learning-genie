@@ -11,6 +11,13 @@ var UserSchema = new mongoose.Schema({
     token:{
         type:String,
         required:true
+    },
+    team :{
+        required: true,
+        type: String,
+        required: true,
+        minlength:1,
+        trim: true
     }
 }) 
 

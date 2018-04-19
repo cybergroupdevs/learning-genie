@@ -1,6 +1,6 @@
 var clientId = '00466414-78cb-46f9-a8f7-3a366b52293e';
 var clientSecret = 'bqmqRFH6239%-jwyCSQL8!$';
-var redirectUri = 'http://localhost:2018/authorize';
+var redirectUri = 'https://warm-savannah-20783.herokuapp.com/authorize';
 var scopes = ['openid','profile','offline_access'];
 
 var credentials = {
@@ -21,10 +21,8 @@ module.exports = {
             redirect_uri: redirectUri,
             scope: scopes
         });
-        console.log('Generated auth Uri: ' + returnVal);
         return returnVal;
     },
-
     getTokenFromCode: (auth_code, callback, request, response)=> {
         oauth2.authorizationCode.getToken({
             code: auth_code,
@@ -37,7 +35,6 @@ module.exports = {
             }
             else {
                 var token = oauth2.accessToken.create(result);
-                console.log('Token created: ', token.token);
                 callback(request, response, null, token);
             }
         });
@@ -53,8 +50,6 @@ module.exports = {
         var decoded_token = encoded_token.toString();
 
         var jwt = JSON.parse(decoded_token);
-        console.log(jwt);
-
         // Email is in the preferred_username field
         return jwt.unique_name
     },
