@@ -1,6 +1,6 @@
 var clientId = '00466414-78cb-46f9-a8f7-3a366b52293e';
 var clientSecret = 'bqmqRFH6239%-jwyCSQL8!$';
-var redirectUri = 'http://localhost:2018/authorize';
+var redirectUri = 'https://warm-savannah-20783.herokuapp.com/authorize';
 var scopes = ['openid','profile','offline_access'];
 
 var credentials = {
