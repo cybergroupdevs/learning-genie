@@ -42,7 +42,7 @@ socket.on('connect', () => {
   else { token = store.get('token') }
 })
 socket.on('clientId',(cid)=>{
-  store.set('clientId',cid);
+  store.set('clientId',cid.clientId);
 })
 socket.on('newQuestion', (res) => {
   console.log('got a new question')

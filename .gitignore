@@ -1,4 +1,5 @@
 app/node_modules/
 
 app/release-builds
+app/dist
 backend/node_modules/
