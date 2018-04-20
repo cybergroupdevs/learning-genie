@@ -5,6 +5,7 @@ const store = new Store({
     configName: 'user-data'
 });
 const ques = store.get('question');
+const cid = store.get('clientId');
 const token = store.get('token');
 const currentWin = remote.BrowserWindow.getFocusedWindow();
 
@@ -15,7 +16,8 @@ submit.addEventListener('click', (event) => {
     let answer = document.getElementById('answer');
     axios.post('https://warm-savannah-20783.herokuapp.com/answer', {
         ans: answer.value,
-        q_id: ques._id
+        q_id: ques._id,
+        clientId: cid
     }).then((res) => {
         if (res.status == 200) {
             alert("Your Response is Recorded :)");

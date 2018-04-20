@@ -12,7 +12,6 @@ const store = new Store({
 const BrowserWindow = electron.remote.BrowserWindow;
 const socket = io('https://warm-savannah-20783.herokuapp.com');
 const { remote } = require('electron')
-
 const msgs = document.getElementById('msg-bubble');
 const msgtxt = document.getElementById('msg')
 const opt = document.getElementById('options')
@@ -21,6 +20,7 @@ const answer = document.getElementById('ans');
 const currentWin = remote.BrowserWindow.getFocusedWindow();
 let ques;
 let token;
+
 socket.on('connect', () => {
   console.log("connected to server")
   if (!store.get('token')) {
@@ -30,7 +30,6 @@ socket.on('connect', () => {
       axios.get('https://warm-savannah-20783.herokuapp.com/getuser').then((data) => {
         token = JSON.stringify(data.data.token);
         store.set('token', JSON.stringify(token))
-        alert(JSON.stringify(token))
       }).catch((e) => {
         alert(e.message)
         currentWin.close();
@@ -41,6 +40,9 @@ socket.on('connect', () => {
     win.show()
   }
   else { token = store.get('token') }
+})
+socket.on('clientId',(cid)=>{
+  store.set('clientId',cid);
 })
 socket.on('newQuestion', (res) => {
   console.log('got a new question')
