@@ -38,14 +38,9 @@ let server = http.createServer(app).listen(port, (p) => {
 });
 
 let io = socketIo(server);
-let redisstore =redis.createClient({
-    host:"redis-19917.c12.us-east-1-4.ec2.cloud.redislabs.com",
-    port:19917,
-    password:"ToC1WFgyqdAn0UHM9T1XXkM3w4n3irp9"
-})
 io.on('connection', (socket) => {
     console.log(socket.client.id)
-    redisstore.set('clientId', socket.client.id)
+    socket.emit('clientId',{"clientId":socket.client.id})
     socket.on('joinroom',(data)=>{
         User.findOne({ token }).then((user) => {
             if (user) {
@@ -171,11 +166,7 @@ app.post('/answer', (req, res) => {
                 if (ans) {
                     res.send("response submitted");
                     res.end();
-                    redisstore.get('clientId',(err,reply)=>{
-                        io.to(reply).emit("submitted")
-                        console.log(reply)
-                    })
-                   
+					io.to(req.body.clientId).emit("submitted")
                 }
                 else {
                     res.status(404).send("error");
