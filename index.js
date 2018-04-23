@@ -40,8 +40,8 @@ let server = http.createServer(app).listen(port, (p) => {
 let io = socketIo(server);
 io.on('connection', (socket) => {
     console.log(socket.client.id)
-    socket.emit('clientId',{"clientId":socket.client.id})
-    socket.on('joinroom',(data)=>{
+    socket.emit('clientId', { "clientId": socket.client.id })
+    socket.on('joinroom', (data) => {
         User.findOne({ token }).then((user) => {
             if (user) {
                 socket.join(user.team)
@@ -49,7 +49,7 @@ io.on('connection', (socket) => {
             else {
                 socket.emit('roomjoinfailed');
             }
-        })  
+        })
     })
 })
 app.get('/login', (req, res) => {
@@ -83,7 +83,7 @@ function tokenReceived(req, res, error, token) {
                 let user = new User({
                     token: req.session.idtoken,
                     email: req.session.email,
-                    team : 'abc'
+                    team: 'abc'
                 })
                 user.save().then((user) => { }).catch(e => console.log(e))
             }
@@ -136,28 +136,40 @@ app.get('/', (req, res) => {
     res.send('Welcome to learning Genie')
 })
 app.post('/question', (req, res) => {
-    let body = _.pick(req.body, ['ques', 'team']);
-    body.atTime = new Date().getTime();
-    let question = new Question(body)
-    question.save().then((question) => {
-        if (!question) {
-            res.status(404).send();
-            res.end();
+    let token = req.headers['x-auth'];
+    User.findOne({ token }).then((user) => {
+        if (user) {
+            if (user.isAdmin) {
+                let body = _.pick(req.body, ['ques', 'team']);
+                body.atTime = new Date().getTime();
+                let question = new Question(body)
+                question.save().then((question) => {
+                    if (!question) {
+                        res.status(404).send();
+                        res.end();
+                    }
+                    else {
+                        res.send("Question posted");
+                        console.log('question emitted');
+                        io.sockets.emit('newQuestion', question);
+                    }
+                })
+            }
+            else {
+                res.status(403).send();
+            }
         }
         else {
-            res.send("Question posted");
-            console.log('question emitted');
-            io.sockets.emit('newQuestion', question);
+            res.status(401).send();
+            console.log("user not found")
         }
-    })
+    }).catch(e => { console.log(JSON.stringify(e, null, 2)) })
 })
 app.post('/answer', (req, res) => {
     let token = req.headers['x-auth'];
-    let length= token.length;
-    token= token.substr(3,length-6);
+    token = authHelper.getToken();
     User.findOne({ token }).then((user) => {
         if (user) {
-            console.log(req.body)
             let body = _.pick(req.body, ['q_id', 'ans']);
             body.u_id = user._id
             body.atTime = new Date().getTime();
@@ -166,7 +178,7 @@ app.post('/answer', (req, res) => {
                 if (ans) {
                     res.send("response submitted");
                     res.end();
-					io.to(req.body.clientId).emit("submitted")
+                    io.to(req.body.clientId).emit("submitted")
                 }
                 else {
                     res.status(404).send("error");
@@ -178,6 +190,100 @@ app.post('/answer', (req, res) => {
             res.status(401).send();
             console.log("user not found")
         }
-    }).catch(e=>{console.log(JSON.stringify(e,null,2))})
+    }).catch(e => { console.log(JSON.stringify(e, null, 2)) })
 })
-
+app.get('/questions', (req, res) => {
+    let token = req.headers['x-auth'];
+    User.findOne({ token }).then((user) => {
+        if (user) {
+            if (user.isAdmin) {
+                Question.find({}).then((questions) => {
+                    if (!questions) {
+                        res.status(400).send()
+                    }
+                    else {
+                        res.send({ questions })
+                    }
+                })
+            }
+            else {
+                res.status(403).send("UnAuthorized");
+            }
+        }
+        else {
+            res.status(401).send();
+            console.log("user not found")
+        }
+    }).catch(e => { console.log(JSON.stringify(e, null, 2)) })
+})
+app.get('/questions/:id', (req, res) => {
+    let token = req.headers['x-auth'];
+    User.findOne({ token }).then((user) => {
+        if (user) {
+            if (user.isAdmin) {
+                Question.findById(req.params.id).then((question) => {
+                    if (!question) {
+                        res.status(400).send()
+                    }
+                    else {
+                        Answer.find({ q_id: req.params.id }).then(answers => {
+                            res.send(answers)
+                        })
+                    }
+                })
+            }
+            else {
+                res.status(403).send("UnAuthorized");
+            }
+        }
+        else {
+            res.status(401).send();
+            console.log("user not found")
+        }
+    }).catch(e => { console.log(JSON.stringify(e, null, 2)) })
+})
+app.get('/users', (req, res) => {
+    let token = req.headers['x-auth'];
+    User.findOne({ token }).then((user) => {
+        if (user) {
+            if (user.isAdmin) {
+                User.find({}).then((users) => {
+                    res.send({ users })
+                })
+            }
+            else {
+                res.status(403).send("UnAuthorized");
+            }
+        }
+        else {
+            res.status(401).send();
+            console.log("user not found")
+        }
+    }).catch(e => { console.log(JSON.stringify(e, null, 2)) })
+})
+app.get('/users/:id', (req, res) => {
+    let token = req.headers['x-auth'];
+    User.findOne({ token }).then((user) => {
+        if (user) {
+            if (user.isAdmin) {
+                User.findById(req.params.id).then((usr) => {
+                    if (!usr) {
+                        res.status(400).send()
+                    }
+                    else {
+                        Answer.find({ u_id: req.params.id }).then(answers => {
+                            res.send(answers)
+                        })
+                    }
+                })
+            }
+            else {
+                res.status(403).send("UnAuthorized");
+            }
+        }
+        else {
+            res.status(401).send();
+            console.log("user not found")
+        }
+    }).catch(e => { console.log(JSON.stringify(e, null, 2)) })
+})

@@ -3,8 +3,7 @@ var QuestionSchema = new mongoose.Schema({
     ques :{
         type: String,
         required: true,
-        minlength:10,
-        unique: true,
+        minlength:1,
         trim: true
     },
     atTime:{

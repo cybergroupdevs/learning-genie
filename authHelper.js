@@ -39,7 +39,6 @@ module.exports = {
             }
         });
     },
-
     getEmailFromIdToken: function (id_token) {
         // JWT is in three parts, separated by a '.'
         var token_parts = id_token.split('.');
@@ -53,7 +52,6 @@ module.exports = {
         // Email is in the preferred_username field
         return jwt.unique_name
     },
-
     getTokenFromRefreshToken: function (refresh_token, callback, request, response) {
         var token = oauth2.accessToken.create({ refresh_token: refresh_token, expires_in: 0 });
         token.refresh(function (error, result) {
@@ -66,5 +64,9 @@ module.exports = {
                 callback(request, response, null, result);
             }
         });
+    },
+    getToken: function(token) {
+        let length= token.length;
+        return token= token.substr(3,length-6);
     }
 }
