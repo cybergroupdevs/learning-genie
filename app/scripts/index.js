@@ -32,8 +32,9 @@ function createWindow() {
     x: 0,
     y: 0
   });
+  console.log(__dirname)
   win.loadURL(url.format({
-    pathname: path.join(__dirname, 'index.html'),
+    pathname: path.join(__dirname, '../views/index.html'),
     protocol: 'file:',
     slashes: true
   }))

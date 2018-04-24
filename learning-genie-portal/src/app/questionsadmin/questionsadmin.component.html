@@ -1,0 +1,40 @@
+<div class="glass">
+  <h1>Questions</h1>
+  <button class="btn btn-lg btn-primary" (click)="addQuesBtn()">
+    <span class="fa fa-plus"></span> Add Team
+  </button>
+  <div *ngIf="isQuesVisible"></div>
+  <div *ngIf="isQuesAdd">
+    <input type="text" class="form-control" [(ngModel)]="add_Ques.ques" placeholder="Question">
+    <input type="text" class="form-control" [(ngModel)]="add_Ques.team" placeholder="Team">
+    <button class="btn btn-lg btn-primary" (click)="addQues()">
+      <span class="fa fa-user-plus"></span> Add
+    </button>
+  </div>
+</div>
+<div class="table-responsive">
+  <table class="table">
+    <thead class="thead-dark">
+      <tr>
+        <th>Question Id</th>
+        <th>Question</th>
+        <th>Team</th>
+        <th>Time</th>
+        <th>Options</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let ques of questions;index as i">
+        <td>{{ques._id}}</td>
+        <td>{{ques.ques}}</td>
+        <td>{{ques.team}}</td>
+        <td>{{ques.time}}</td>
+        <td>
+          <button class="btn btn-sm btn-primary" (click)="ansQuesBtn(i)">
+            View Answers
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

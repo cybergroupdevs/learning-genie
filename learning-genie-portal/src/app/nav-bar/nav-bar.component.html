@@ -1,0 +1,20 @@
+<nav class="navbar navbar-light navbar-expand-sm bg-primary">
+  <a class="navbar-brand" routerLink="">
+   Learning Genie</a>
+    <ul class="navbar-nav mr-auto" *ngIf="myStorage.isAdmin">
+      <li class="nav-item">
+        <a routerLink="questions" class="nav-link">
+          Questions <span class="fa fa-question-circle"></span></a>
+      </li>
+      <li class="nav-item">
+        <a routerLink="users" class="nav-link">
+          Users <span class="fa"></span></a>
+      </li>
+    </ul>
+    <ul class="navbar-nav navbar-right" *ngIf="myStorage.UserType">
+      <li class="nav-item">
+        <a (click)="logOut()" class="nav-link">
+          <span class="fa fa-sign-out"></span> Log Out</a>
+      </li>
+    </ul>
+</nav>

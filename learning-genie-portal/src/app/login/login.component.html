@@ -1,0 +1,10 @@
+
+<div class="container">
+  <form class="form-signin glass" #f="ngForm">
+    <h2 class="form-signin-heading">Please sign in</h2>
+    <button class="btn btn-lg btn-primary btn-block" type="submit" (click)="loginSubmit(f)" *ngIf="isLoginVisible">
+      <span class="fa fa-sign-in"></span> Log In</button>
+      <button class="btn btn-lg btn-primary btn-block" type="submit" (click)="continue(f)" *ngIf="isContinueVisible">
+        <span class="fa fa-sign-in"></span> Continue</button>
+  </form>
+</div>

@@ -3,3 +3,5 @@ app/node_modules/
 app/release-builds
 app/dist
 backend/node_modules/
+
+learning-genie-portal/node_modules/

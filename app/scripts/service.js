@@ -2,7 +2,7 @@ const electron = require('electron');
 const path = require('path');
 const axios = require('axios')
 const $ = require('jquery')
-const Store = require('./store')
+const Store = require('../scripts/store')
 const store = new Store({
   configName: 'user-data',
   defaults: {
