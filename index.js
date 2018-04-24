@@ -77,9 +77,11 @@ function tokenReceived(req, res, error, token) {
         User.findOne({ 'email': req.session.email }, function (err, founduser) {
             if (founduser) {
                 req.session.idtoken = founduser.token;
+				req.session.isAdmin = founduser.isAdmin;
             }
             else {
                 req.session.idtoken = token.token.id_token;
+				req.session.isAdmin = false;
                 let user = new User({
                     token: req.session.idtoken,
                     email: req.session.email,
@@ -110,6 +112,7 @@ app.get('/getuser', (req, res) => {
         res.send({
             token: req.session.idtoken,
             email: req.session.email
+			isAdmin: req.session.isAdmin
         })
     }
     else {
