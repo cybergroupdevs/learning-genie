@@ -111,7 +111,7 @@ app.get('/getuser', (req, res) => {
     if (req.session.idtoken) {
         res.send({
             token: req.session.idtoken,
-            email: req.session.email
+            email: req.session.email,
 			isAdmin: req.session.isAdmin
         })
     }
