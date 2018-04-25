@@ -170,7 +170,7 @@ app.post('/question', (req, res) => {
 })
 app.post('/answer', (req, res) => {
     let token = req.headers['x-auth'];
-    token = authHelper.getToken();
+    token = authHelper.getToken(token);
     User.findOne({ token }).then((user) => {
         if (user) {
             let body = _.pick(req.body, ['q_id', 'ans']);
