@@ -11,7 +11,7 @@
           Users <span class="fa"></span></a>
       </li>
     </ul>
-    <ul class="navbar-nav navbar-right" *ngIf="myStorage.UserType">
+    <ul class="navbar-nav navbar-right" *ngIf="myStorage.isAdmin">
       <li class="nav-item">
         <a (click)="logOut()" class="nav-link">
           <span class="fa fa-sign-out"></span> Log Out</a>
