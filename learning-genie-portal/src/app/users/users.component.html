@@ -8,10 +8,10 @@
             <th>E-Mail</th>
             <th>Team</th>
             <th>IsAdmin</th>
-            <th colspan="2">Options</th>
+            <th >Options</th>
           </tr>
         </thead>
-        <tbody *ngFor="let adminUser of adminUsers;index as i">
+        <tbody *ngFor="let user of users;index as i">
           <tr>
             <td>{{ user._id }}</td>
             <td>{{ user.email }}</td>

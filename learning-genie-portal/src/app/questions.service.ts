@@ -7,7 +7,7 @@ const url = 'https://warm-savannah-20783.herokuapp.com/';
 const httpOptions = {
   headers: new HttpHeaders({
     'Content-Type': 'application/json',
-    'Authorization': localStorage.getItem('id_token')
+    'x-auth': localStorage.getItem('id_token')
   })
 };
 @Injectable()
@@ -18,6 +18,6 @@ export class QuestionsService {
     return this.http.get(url + 'questions', httpOptions).map(resp => resp);
   }
   postQuestion(data) {
-    return this.http.post(url + 'question', data, httpOptions).map(resp => resp);
+    return this.http.post(url + 'question', data, httpOptions).map(resp => resp = resp['message']);
   }
 }

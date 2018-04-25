@@ -1,6 +1,6 @@
 const { remote } = require('electron')
 const axios = require("axios");
-const Store = require('./store')
+const Store = require('../scripts/store')
 const store = new Store({
     configName: 'user-data'
 });
@@ -9,7 +9,7 @@ const cid = store.get('clientId');
 const token = store.get('token');
 const currentWin = remote.BrowserWindow.getFocusedWindow();
 
-axios.defaults.headers.common['X-auth']= token;
+axios.defaults.headers.common['x-auth']= token;
 const submit = document.getElementById('submit');
 const cancel = document.getElementById('cancel');
 submit.addEventListener('click', (event) => {

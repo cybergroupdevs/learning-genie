@@ -1,7 +1,7 @@
 <div class="glass">
   <h1>Questions</h1>
   <button class="btn btn-lg btn-primary" (click)="addQuesBtn()">
-    <span class="fa fa-plus"></span> Add Team
+    <span class="fa fa-plus"></span> Add Question
   </button>
   <div *ngIf="isQuesVisible"></div>
   <div *ngIf="isQuesAdd">
@@ -24,11 +24,11 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let ques of questions;index as i">
-        <td>{{ques._id}}</td>
-        <td>{{ques.ques}}</td>
-        <td>{{ques.team}}</td>
-        <td>{{ques.time}}</td>
+      <tr *ngFor="let question of questions;index as i">
+        <td>{{question._id}}</td>
+        <td>{{question.ques}}</td>
+        <td>{{question.team}}</td>
+        <td>{{question.time}}</td>
         <td>
           <button class="btn btn-sm btn-primary" (click)="ansQuesBtn(i)">
             View Answers

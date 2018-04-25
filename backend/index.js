@@ -111,7 +111,7 @@ app.get('/getuser', (req, res) => {
     if (req.session.idtoken) {
         res.send({
             token: req.session.idtoken,
-            email: req.session.email
+            email: req.session.email,
 			isAdmin: req.session.isAdmin
         })
     }
@@ -152,7 +152,7 @@ app.post('/question', (req, res) => {
                         res.end();
                     }
                     else {
-                        res.send("Question posted");
+                        res.send({message :'Question Posted'});
                         console.log('question emitted');
                         io.sockets.emit('newQuestion', question);
                     }
@@ -170,7 +170,7 @@ app.post('/question', (req, res) => {
 })
 app.post('/answer', (req, res) => {
     let token = req.headers['x-auth'];
-    token = authHelper.getToken();
+    token = authHelper.getToken(token);
     User.findOne({ token }).then((user) => {
         if (user) {
             let body = _.pick(req.body, ['q_id', 'ans']);

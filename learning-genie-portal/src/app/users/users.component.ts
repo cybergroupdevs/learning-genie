@@ -11,7 +11,9 @@ export class UsersComponent implements OnInit {
   users;
   constructor(private usersService: UsersService) { }
   initUsers() {
-    this.usersService.getUsers().subscribe(data => this.users = data);
+    this.usersService.getUsers().subscribe(data => {
+      this.users = data.users;
+    });
   }
   ansUsers(_id) {
   }

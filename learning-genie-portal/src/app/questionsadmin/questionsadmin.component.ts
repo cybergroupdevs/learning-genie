@@ -24,18 +24,20 @@ export class QuestionsadminComponent implements OnInit {
   ansQuesBtn(index) {
   }
   quesInit() {
-    this.questionsService.getQuestions().subscribe(data => {
-      this.questions = data;
+    this.questionsService.getQuestions().subscribe((data) => {
+      this.questions = data.questions;
     });
   }
   addQues() {
     let data = {
-      ques: this.add_Ques.ques,
-      team: this.add_Ques.team,
+      'ques': this.add_Ques.ques,
+      'team': this.add_Ques.team,
     };
-    this.questionsService.postQuestion(data).subscribe( (data) => {
+    this.questionsService.postQuestion(data).subscribe((resp) => {
+      alert(JSON.stringify(resp));
       this.quesInit();
       this.isQuesAdd = false;
+      this.isQuesVisible = false;
     });
   }
   ngOnInit() {
