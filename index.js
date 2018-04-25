@@ -152,7 +152,7 @@ app.post('/question', (req, res) => {
                         res.end();
                     }
                     else {
-                        res.send("Question posted");
+                        res.send({message :'Question Posted'});
                         console.log('question emitted');
                         io.sockets.emit('newQuestion', question);
                     }
