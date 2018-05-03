@@ -4,6 +4,21 @@
     <h2 class="form-signin-heading">Please sign in</h2>
     <button class="btn btn-lg btn-primary btn-block" type="submit" (click)="loginSubmit(f)" *ngIf="isLoginVisible">
       <span class="fa fa-sign-in"></span> Log In</button>
+      <iframe name="theFrame" id="theFrame" height="400" width="650" hidden>
+        <script type="text/javascript">
+          function readCookie(name) {
+              var nameEQ = name + "=";
+              var ca = document.cookie.split(';');
+              for (var i = 0; i < ca.length; i++) {
+                  var c = ca[i];
+                  while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+                  if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+              }
+              return null;
+          }
+          parent.postMessage(readCookie('connect.sid'), "http://localhost:4200/login");
+      </script>
+      </iframe>
       <button class="btn btn-lg btn-primary btn-block" type="submit" (click)="continue(f)" *ngIf="isContinueVisible">
         <span class="fa fa-sign-in"></span> Continue</button>
   </form>
