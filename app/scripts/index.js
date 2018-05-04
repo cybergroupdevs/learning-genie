@@ -29,6 +29,7 @@ function createWindow() {
     simpleFullscreen: false,
     skipTaskbar: true,
     title: null,
+    hasShadow: false,
     x: 0,
     y: 0
   });
