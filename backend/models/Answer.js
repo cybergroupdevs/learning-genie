@@ -6,6 +6,11 @@ var AnswerSchema = new mongoose.Schema({
         minlength: 1,
         trim: true
     },
+    correct: {
+        type: Boolean,
+        required: true,
+        default: false
+    },
     q_id:{
         type:String,
         required:true
