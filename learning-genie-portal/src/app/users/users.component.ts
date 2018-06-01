@@ -15,7 +15,10 @@ export class UsersComponent implements OnInit {
       this.users = data.users;
     });
   }
-  ansUsers(_id) {
+  ansUsers(index) {
+    this.usersService.getAnswers(this.users[index]._id).subscribe((data) => {
+      alert(JSON.stringify(data, null, 2));
+    });
   }
   ngOnInit() {
     this.initUsers();

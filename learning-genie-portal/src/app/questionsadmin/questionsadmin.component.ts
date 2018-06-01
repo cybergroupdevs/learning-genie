@@ -18,10 +18,14 @@ export class QuestionsadminComponent implements OnInit {
     this.isQuesVisible = true;
     this.add_Ques = {
       ques: null,
-      team: null
+      team: null,
+      keys: null
     };
   }
   ansQuesBtn(index) {
+    this.questionsService.getAnswers(this.questions[index]._id).subscribe((data) => {
+      alert(JSON.stringify(data, null, 2));
+    });
   }
   quesInit() {
     this.questionsService.getQuestions().subscribe((data) => {
@@ -32,6 +36,7 @@ export class QuestionsadminComponent implements OnInit {
     let data = {
       'ques': this.add_Ques.ques,
       'team': this.add_Ques.team,
+      'keys': this.add_Ques.keys,
     };
     this.questionsService.postQuestion(data).subscribe((resp) => {
       alert(JSON.stringify(resp));

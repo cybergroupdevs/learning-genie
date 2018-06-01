@@ -14,7 +14,7 @@ const submit = document.getElementById('submit');
 const cancel = document.getElementById('cancel');
 submit.addEventListener('click', (event) => {
     let answer = document.getElementById('answer');
-    axios.post('https://warm-savannah-20783.herokuapp.com/answer', {
+    axios.post('https://learning-genie777.herokuapp.com/answer', {
         ans: answer.value,
         q_id: ques._id,
         clientId: cid

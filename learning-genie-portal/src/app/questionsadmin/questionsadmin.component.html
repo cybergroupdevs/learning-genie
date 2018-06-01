@@ -5,8 +5,11 @@
   </button>
   <div *ngIf="isQuesVisible"></div>
   <div *ngIf="isQuesAdd">
-    <input type="text" class="form-control" [(ngModel)]="add_Ques.ques" placeholder="Question">
-    <input type="text" class="form-control" [(ngModel)]="add_Ques.team" placeholder="Team">
+    <br>
+    <input type="text" class="form-control" [(ngModel)]="add_Ques.ques" placeholder="Question">  <br>
+    <input type="text" class="form-control" [(ngModel)]="add_Ques.team" placeholder="Team">  <br>
+    <input type="text" class="form-control" [(ngModel)]="add_Ques.keys" placeholder="Keys (Seperate Keys with ',')">
+    <br>
     <button class="btn btn-lg btn-primary" (click)="addQues()">
       <span class="fa fa-user-plus"></span> Add
     </button>

@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
 })
 export class LoginComponent implements OnInit {
   constructor(private router: Router, private navbar: NavBarComponent, private http: HttpClient) { }
-  url = 'https://warm-savannah-20783.herokuapp.com/';
+  url = 'https://learning-genie777.herokuapp.com/';
   isLoginVisible = true;
   isContinueVisible = false;
   win;

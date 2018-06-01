@@ -28,7 +28,7 @@ socket.on('connect', () => {
     console.log('no token found')
     let win = new BrowserWindow({ width: 800, height: 500, autoHideMenuBar: true, alwaysOnTop: true })
     win.on('close', function () {
-      axios.get('https://warm-savannah-20783.herokuapp.com/getuser').then((data) => {
+      axios.get('https://learning-genie777.herokuapp.com/getuser').then((data) => {
         token = JSON.stringify(data.data.token);
         store.set('token', JSON.stringify(token))
       }).catch((e) => {
@@ -37,7 +37,7 @@ socket.on('connect', () => {
       })
       win = null
     })
-    win.loadURL('https://warm-savannah-20783.herokuapp.com/login')
+    win.loadURL('https://learning-genie777.herokuapp.com/login')
     win.show()
   }
   else { token = store.get('token') }
