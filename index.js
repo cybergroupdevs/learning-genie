@@ -143,7 +143,7 @@ app.post('/question', (req, res) => {
     User.findOne({ token }).then((user) => {
         if (user) {
             if (user.isAdmin) {
-                let body = _.pick(req.body, ['ques', 'team']);
+                let body = _.pick(req.body, ['ques', 'keys', 'team']);
                 body.atTime = new Date().getTime();
                 let question = new Question(body)
                 question.save().then((question) => {
@@ -170,30 +170,34 @@ app.post('/question', (req, res) => {
 })
 app.post('/answer', (req, res) => {
     let token = req.headers['x-auth'];
-    token = authHelper.getToken(token);
+    //token = authHelper.getToken(token);
     User.findOne({ token }).then((user) => {
         if (user) {
             let body = _.pick(req.body, ['q_id', 'ans']);
             body.u_id = user._id
-            body.atTime = new Date().getTime();
-            let answer = new Answer(body);
-            answer.save().then((ans) => {
-                if (ans) {
-                    res.send("response submitted");
-                    res.end();
-                    io.to(req.body.clientId).emit("submitted")
-                }
-                else {
-                    res.status(404).send("error");
-                    res.end();
-                }
+            body.atTime = new Date().getTime()
+            let answer = new Answer(body)
+            Question.checkAns(body).then((resp)=>{
+                answer.correct= resp
+                answer.save().then((ans) => {
+                    if (ans) {
+                        res.send("response submitted"); 
+                        res.end();
+                       // io.to(req.body.clientId).emit("submitted")
+                    }
+                    else {
+                        res.status(404).send("error");
+                        res.end();
+                    }
+                })
             })
+           
         }
         else {
             res.status(401).send();
             console.log("user not found")
         }
-    }).catch(e => { console.log(JSON.stringify(e, null, 2)) })
+    }).catch(e => { console.log("error:",JSON.stringify(e, null, 2)) })
 })
 app.get('/questions', (req, res) => {
     let token = req.headers['x-auth'];
@@ -229,7 +233,7 @@ app.get('/questions/:id', (req, res) => {
                         res.status(400).send()
                     }
                     else {
-                        Answer.find({ q_id: req.params.id }).then(answers => {
+                        Answer.find({ q_id: req.params.id }).populate('u_id', 'email').then(answers => {
                             res.send(answers)
                         })
                     }
@@ -274,7 +278,7 @@ app.get('/users/:id', (req, res) => {
                         res.status(400).send()
                     }
                     else {
-                        Answer.find({ u_id: req.params.id }).then(answers => {
+                        Answer.find({ u_id: req.params.id }).populate('q_id').then(answers => {
                             res.send(answers)
                         })
                     }
