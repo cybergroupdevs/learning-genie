@@ -233,7 +233,7 @@ app.get('/questions/:id', (req, res) => {
                         res.status(400).send()
                     }
                     else {
-                        Answer.find({ q_id: req.params.id }).then(answers => {
+                        Answer.find({ q_id: req.params.id }).populate('u_id', 'email').then(answers => {
                             res.send(answers)
                         })
                     }
@@ -278,7 +278,7 @@ app.get('/users/:id', (req, res) => {
                         res.status(400).send()
                     }
                     else {
-                        Answer.find({ u_id: req.params.id }).then(answers => {
+                        Answer.find({ u_id: req.params.id }).populate('q_id').then(answers => {
                             res.send(answers)
                         })
                     }

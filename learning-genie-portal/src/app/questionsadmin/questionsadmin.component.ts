@@ -1,3 +1,4 @@
+import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 import { QuestionsService } from './../questions.service';
 import { Component, OnInit } from '@angular/core';
 
@@ -12,7 +13,8 @@ export class QuestionsadminComponent implements OnInit {
   questions;
   edit_Ques;
   add_Ques;
-  constructor(private questionsService: QuestionsService) { }
+  ansOfQues;
+  constructor(private questionsService: QuestionsService, private modalService: NgbModal) { }
   addQuesBtn() {
     this.isQuesAdd = !this.isQuesAdd;
     this.isQuesVisible = true;
@@ -22,9 +24,10 @@ export class QuestionsadminComponent implements OnInit {
       keys: null
     };
   }
-  ansQuesBtn(index) {
+  ansQuesBtn(index, content) {
     this.questionsService.getAnswers(this.questions[index]._id).subscribe((data) => {
-      alert(JSON.stringify(data, null, 2));
+      this.ansOfQues = data;
+      this.modalService.open(content, { size: 'lg' });
     });
   }
   quesInit() {

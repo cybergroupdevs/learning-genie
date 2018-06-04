@@ -1,3 +1,4 @@
+import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 import { UsersService } from './../users.service';
 import { Component, OnInit } from '@angular/core';
 
@@ -7,17 +8,19 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./users.component.css']
 })
 export class UsersComponent implements OnInit {
-
   users;
-  constructor(private usersService: UsersService) { }
+  ansOfUser;
+  constructor(private usersService: UsersService, private modalService: NgbModal) { }
   initUsers() {
     this.usersService.getUsers().subscribe(data => {
       this.users = data.users;
     });
   }
-  ansUsers(index) {
+  ansUsers(index, content) {
     this.usersService.getAnswers(this.users[index]._id).subscribe((data) => {
-      alert(JSON.stringify(data, null, 2));
+      this.ansOfUser = data;
+      this.modalService.open(content, { size: 'lg' });
+      // alert(JSON.stringify(data, null, 2));
     });
   }
   ngOnInit() {

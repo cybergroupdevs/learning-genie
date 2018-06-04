@@ -19,7 +19,6 @@
   <table class="table">
     <thead class="thead-dark">
       <tr>
-        <th>Question Id</th>
         <th>Question</th>
         <th>Team</th>
         <th>Time</th>
@@ -28,12 +27,11 @@
     </thead>
     <tbody>
       <tr *ngFor="let question of questions;index as i">
-        <td>{{question._id}}</td>
         <td>{{question.ques}}</td>
         <td>{{question.team}}</td>
-        <td>{{question.time}}</td>
+        <td>{{question.atTime | date: 'MM-dd-yyyy HH:mm:ss Z' }}</td>
         <td>
-          <button class="btn btn-sm btn-primary" (click)="ansQuesBtn(i)">
+          <button class="btn btn-sm btn-primary" (click)="ansQuesBtn(i,content)">
             View Answers
           </button>
         </td>
@@ -41,3 +39,34 @@
     </tbody>
   </table>
 </div>
+<ng-template #content let-c="close" let-d="dismiss">
+    <div class="modal-header">
+      <h4 class="modal-title">Answers</h4>
+      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+        <span aria-hidden="true">×</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <table class="table">
+        <thead class="thead-dark">
+          <tr>
+            <th>User</th>
+            <th>Answer</th>
+            <th>Correct</th>
+            <th>Answered At</th>
+          </tr>
+        </thead>
+        <tbody *ngFor="let ans of ansOfQues">
+          <tr>
+            <td>{{ ans.u_id }}</td>
+            <td>{{ ans.ans }}</td>
+            <td>{{ ans.correct }}</td>
+            <td>{{ ans.atTime | date: 'MM-dd-yyyy HH:mm:ss Z' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-outline-dark" (click)="c('Close click')">Close</button>
+    </div>
+  </ng-template>

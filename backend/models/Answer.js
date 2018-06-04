@@ -12,11 +12,13 @@ var AnswerSchema = new mongoose.Schema({
         default: false
     },
     q_id:{
-        type:String,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Question',
         required:true
     },
     u_id:{
-        type:String,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Users',
         required:true
     },
     atTime:{

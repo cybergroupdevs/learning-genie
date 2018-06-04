@@ -4,21 +4,19 @@
       <table class="table">
         <thead class="thead-dark">
           <tr>
-            <th align="center">User_ID</th>
             <th>E-Mail</th>
             <th>Team</th>
             <th>IsAdmin</th>
-            <th >Options</th>
+            <th>Options</th>
           </tr>
         </thead>
         <tbody *ngFor="let user of users;index as i">
           <tr>
-            <td>{{ user._id }}</td>
             <td>{{ user.email }}</td>
             <td>{{ user.team }}</td>
             <td>{{ user.isAdmin }}</td>
             <td>
-              <button (click)="ansUsers(i)" class="btn btn-primary">
+              <button (click)="ansUsers(i,content)" class="btn btn-primary">
                 View Answers
               </button>
             </td>
@@ -28,3 +26,34 @@
     </div>
   </div>
 </div>
+<ng-template #content let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title">Answers By User</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">×</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <table class="table">
+      <thead class="thead-dark">
+        <tr>
+          <th>Question</th>
+          <th>Answer</th>
+          <th>Correct</th>
+          <th>Answered At</th>
+        </tr>
+      </thead>
+      <tbody *ngFor="let ans of ansOfUser">
+        <tr>
+          <td>{{ ans.q_id }}</td>
+          <td>{{ ans.ans }}</td>
+          <td>{{ ans.correct }}</td>
+          <td>{{ ans.atTime | date: 'MM-dd-yyyy HH:mm:ss Z' }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="c('Close click')">Close</button>
+  </div>
+</ng-template>
