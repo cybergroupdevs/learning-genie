@@ -170,7 +170,7 @@ app.post('/question', (req, res) => {
 })
 app.post('/answer', (req, res) => {
     let token = req.headers['x-auth'];
-    //token = authHelper.getToken(token);
+    token = authHelper.getToken(token);
     User.findOne({ token }).then((user) => {
         if (user) {
             let body = _.pick(req.body, ['q_id', 'ans']);
@@ -183,7 +183,7 @@ app.post('/answer', (req, res) => {
                     if (ans) {
                         res.send("response submitted"); 
                         res.end();
-                       // io.to(req.body.clientId).emit("submitted")
+                        io.to(req.body.clientId).emit("submitted")
                     }
                     else {
                         res.status(404).send("error");
