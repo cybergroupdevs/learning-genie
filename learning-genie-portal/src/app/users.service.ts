@@ -18,4 +18,7 @@ export class UsersService {
   getAnswers(id): Observable<any> {
     return this.http.get(url + 'users/' + id, httpOptions).map(resp => resp);
   }
+  getUsersData(id): Observable<any> {
+    return this.http.get(url + 'usersdata/' + id, httpOptions).map(resp => resp);
+  }
 }

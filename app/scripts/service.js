@@ -10,7 +10,7 @@ const store = new Store({
   }
 });
 const BrowserWindow = electron.remote.BrowserWindow;
-const socket = io('https://warm-savannah-20783.herokuapp.com');
+const socket = io('https://learning-genie777.herokuapp.com');
 const { remote } = require('electron')
 const msgs = document.getElementById('msg-bubble');
 const msgtxt = document.getElementById('msg')

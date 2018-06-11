@@ -19,6 +19,9 @@
               <button (click)="ansUsers(i,content)" class="btn btn-primary">
                 View Answers
               </button>
+              <button (click)="makegraph(i,graphs)" class="btn btn-primary">
+                View Graphs
+              </button>
             </td>
           </tr>
         </tbody>
@@ -34,26 +37,39 @@
     </button>
   </div>
   <div class="modal-body">
-    <table class="table">
-      <thead class="thead-dark">
-        <tr>
-          <th>Question</th>
-          <th>Answer</th>
-          <th>Correct</th>
-          <th>Answered At</th>
-        </tr>
-      </thead>
-      <tbody *ngFor="let ans of ansOfUser">
-        <tr>
-          <td>{{ ans.q_id }}</td>
-          <td>{{ ans.ans }}</td>
-          <td>{{ ans.correct }}</td>
-          <td>{{ ans.atTime | date: 'MM-dd-yyyy HH:mm:ss Z' }}</td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="table-responsive">
+      <table class="table">
+        <thead class="thead-dark">
+          <tr>
+            <th>Question</th>
+            <th>Answer</th>
+            <th>Correct</th>
+            <th>Answered At</th>
+          </tr>
+        </thead>
+        <tbody *ngFor="let ans of ansOfUser">
+          <tr>
+            <td>{{ ans.q_id.ques }}</td>
+            <td>{{ ans.ans }}</td>
+            <td>{{ ans.correct }}</td>
+            <td>{{ ans.atTime | date: 'MM-dd-yyyy HH:mm:ss Z' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-outline-dark" (click)="c('Close click')">Close</button>
+  </div>
+</ng-template>
+<ng-template #graphs let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title">Answers</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">×</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <fusioncharts [id]="id" [width]="width" [height]="height" [type]="type" [dataFormat]="dataFormat" [dataSource]="dataSource"></fusioncharts>
   </div>
 </ng-template>

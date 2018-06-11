@@ -6,8 +6,10 @@
   <div *ngIf="isQuesVisible"></div>
   <div *ngIf="isQuesAdd">
     <br>
-    <input type="text" class="form-control" [(ngModel)]="add_Ques.ques" placeholder="Question">  <br>
-    <input type="text" class="form-control" [(ngModel)]="add_Ques.team" placeholder="Team">  <br>
+    <input type="text" class="form-control" [(ngModel)]="add_Ques.ques" placeholder="Question">
+    <br>
+    <input type="text" class="form-control" [(ngModel)]="add_Ques.team" placeholder="Team">
+    <br>
     <input type="text" class="form-control" [(ngModel)]="add_Ques.keys" placeholder="Keys (Seperate Keys with ',')">
     <br>
     <button class="btn btn-lg btn-primary" (click)="addQues()">
@@ -15,7 +17,7 @@
     </button>
   </div>
 </div>
-<div class="table-responsive">
+<div class="table-responsive glass">
   <table class="table">
     <thead class="thead-dark">
       <tr>
@@ -31,8 +33,11 @@
         <td>{{question.team}}</td>
         <td>{{question.atTime | date: 'MM-dd-yyyy HH:mm:ss Z' }}</td>
         <td>
-          <button class="btn btn-sm btn-primary" (click)="ansQuesBtn(i,content)">
+          <button class="btn btn-primary" (click)="ansQuesBtn(i,content)">
             View Answers
+          </button>
+          <button (click)="makegraph(i,graphs)" class="btn btn-primary">
+            View Graphs
           </button>
         </td>
       </tr>
@@ -40,13 +45,14 @@
   </table>
 </div>
 <ng-template #content let-c="close" let-d="dismiss">
-    <div class="modal-header">
-      <h4 class="modal-title">Answers</h4>
-      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
-        <span aria-hidden="true">×</span>
-      </button>
-    </div>
-    <div class="modal-body">
+  <div class="modal-header">
+    <h4 class="modal-title">Answers</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">×</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="table-responsive">
       <table class="table">
         <thead class="thead-dark">
           <tr>
@@ -58,7 +64,7 @@
         </thead>
         <tbody *ngFor="let ans of ansOfQues">
           <tr>
-            <td>{{ ans.u_id }}</td>
+            <td>{{ ans.u_id.email }}</td>
             <td>{{ ans.ans }}</td>
             <td>{{ ans.correct }}</td>
             <td>{{ ans.atTime | date: 'MM-dd-yyyy HH:mm:ss Z' }}</td>
@@ -66,7 +72,19 @@
         </tbody>
       </table>
     </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-outline-dark" (click)="c('Close click')">Close</button>
-    </div>
-  </ng-template>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="c('Close click')">Close</button>
+  </div>
+</ng-template>
+<ng-template #graphs let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title">Answers</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">×</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <fusioncharts [id]="id" [width]="width" [height]="height" [type]="type" [dataFormat]="dataFormat" [dataSource]="dataSource"></fusioncharts>
+  </div>
+</ng-template>

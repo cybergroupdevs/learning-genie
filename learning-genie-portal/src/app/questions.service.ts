@@ -23,4 +23,7 @@ export class QuestionsService {
   postQuestion(data) {
     return this.http.post(url + 'question', data, httpOptions).map(resp => resp = resp['message']);
   }
+  getQuestionsData(id): Observable<any> {
+    return this.http.get(url + 'questionsdata/' + id, httpOptions).map(resp => resp);
+  }
 }

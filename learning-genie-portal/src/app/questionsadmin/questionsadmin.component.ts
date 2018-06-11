@@ -14,6 +14,13 @@ export class QuestionsadminComponent implements OnInit {
   edit_Ques;
   add_Ques;
   ansOfQues;
+  id = 'chart1';
+  width = 600;
+  height = 400;
+  type = 'pie3d';
+  dataFormat = 'json';
+  dataSource;
+  title = 'Learning Genie';
   constructor(private questionsService: QuestionsService, private modalService: NgbModal) { }
   addQuesBtn() {
     this.isQuesAdd = !this.isQuesAdd;
@@ -46,6 +53,35 @@ export class QuestionsadminComponent implements OnInit {
       this.quesInit();
       this.isQuesAdd = false;
       this.isQuesVisible = false;
+    });
+  }
+  makegraph(index, graphs) {
+    this.questionsService.getQuestionsData(this.questions[index]._id).subscribe((data) => {
+      this.dataSource = {
+        'chart': {
+          'caption': 'Learning Genie',
+            'subCaption': 'Answers',
+            'showlegend': '1',
+            'showpercentvalues': '1',
+            'showpercentintooltip': '0',
+          'theme': 'fint'
+        },
+        'data': [
+          {
+            'label': 'Incorrect',
+            'value': data.inCorrect
+          },
+          {
+            'label': 'Correct',
+            'value': data.correct
+          },
+          {
+            'label': 'Not Answered',
+            'value': data.notAnswered
+          }
+        ]
+      };
+      this.modalService.open(graphs, { size: 'lg' });
     });
   }
   ngOnInit() {
