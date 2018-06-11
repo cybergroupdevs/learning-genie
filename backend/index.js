@@ -77,11 +77,11 @@ function tokenReceived(req, res, error, token) {
         User.findOne({ 'email': req.session.email }, function (err, founduser) {
             if (founduser) {
                 req.session.idtoken = founduser.token;
-				req.session.isAdmin = founduser.isAdmin;
+                req.session.isAdmin = founduser.isAdmin;
             }
             else {
                 req.session.idtoken = token.token.id_token;
-				req.session.isAdmin = false;
+                req.session.isAdmin = false;
                 let user = new User({
                     token: req.session.idtoken,
                     email: req.session.email,
@@ -112,7 +112,7 @@ app.get('/getuser', (req, res) => {
         res.send({
             token: req.session.idtoken,
             email: req.session.email,
-			isAdmin: req.session.isAdmin
+            isAdmin: req.session.isAdmin
         })
     }
     else {
@@ -152,7 +152,7 @@ app.post('/question', (req, res) => {
                         res.end();
                     }
                     else {
-                        res.send({message :'Question Posted'});
+                        res.send({ message: 'Question Posted' });
                         console.log('question emitted');
                         io.sockets.emit('newQuestion', question);
                     }
@@ -177,11 +177,11 @@ app.post('/answer', (req, res) => {
             body.u_id = user._id
             body.atTime = new Date().getTime()
             let answer = new Answer(body)
-            Question.checkAns(body).then((resp)=>{
-                answer.correct= resp
+            Question.checkAns(body).then((resp) => {
+                answer.correct = resp
                 answer.save().then((ans) => {
                     if (ans) {
-                        res.send("response submitted"); 
+                        res.send("response submitted");
                         res.end();
                         io.to(req.body.clientId).emit("submitted")
                     }
@@ -191,13 +191,13 @@ app.post('/answer', (req, res) => {
                     }
                 })
             })
-           
+
         }
         else {
             res.status(401).send();
             console.log("user not found")
         }
-    }).catch(e => { console.log("error:",JSON.stringify(e, null, 2)) })
+    }).catch(e => { console.log("error:", JSON.stringify(e, null, 2)) })
 })
 app.get('/questions', (req, res) => {
     let token = req.headers['x-auth'];
@@ -259,18 +259,18 @@ app.get('/questionsdata/:id', (req, res) => {
                         res.status(400).send()
                     }
                     else {
-                        let total=correct=inCorrect=notAnswered=0;
-                        User.count({ team: question.team}).then((count,err)=>{
-                            total=count
-                            Answer.count({q_id: req.params.id , correct: true }).then((count,err)=>{
-                                correct=count
-                                Answer.count({q_id: req.params.id , correct: false }).then((count,err)=>{
-                                    inCorrect=count
+                        let total = correct = inCorrect = notAnswered = 0;
+                        User.count({ team: question.team }).then((count, err) => {
+                            total = count
+                            Answer.count({ q_id: req.params.id, correct: true }).then((count, err) => {
+                                correct = count
+                                Answer.count({ q_id: req.params.id, correct: false }).then((count, err) => {
+                                    inCorrect = count
                                     notAnswered = total - (correct + inCorrect);
                                     res.send({
-                                        'correct' : correct,
-                                        'inCorrect' : inCorrect,
-                                        'notAnswered' : notAnswered
+                                        'correct': correct,
+                                        'inCorrect': inCorrect,
+                                        'notAnswered': notAnswered
                                     })
                                 })
                             })
@@ -343,24 +343,59 @@ app.get('/usersdata/:id', (req, res) => {
                         res.status(400).send()
                     }
                     else {
-                        let total=correct=inCorrect=notAnswered=0;
-                        Question.count({ team: usr.team}).then((count,err)=>{
-                            total=count
-                            Answer.count({u_id: req.params.id , correct: true }).then((count,err)=>{
-                                correct=count
-                                Answer.count({u_id: req.params.id , correct: false }).then((count,err)=>{
-                                    inCorrect=count
+                        let total = correct = inCorrect = notAnswered = 0;
+                        Question.count({ team: usr.team }).then((count, err) => {
+                            total = count
+                            Answer.count({ u_id: req.params.id, correct: true }).then((count, err) => {
+                                correct = count
+                                Answer.count({ u_id: req.params.id, correct: false }).then((count, err) => {
+                                    inCorrect = count
                                     notAnswered = total - (correct + inCorrect);
                                     res.send({
-                                        'correct' : correct,
-                                        'inCorrect' : inCorrect,
-                                        'notAnswered' : notAnswered
+                                        'correct': correct,
+                                        'inCorrect': inCorrect,
+                                        'notAnswered': notAnswered
                                     })
                                 })
                             })
                         });
                     }
                 })
+            }
+            else {
+                res.status(403).send("UnAuthorized");
+            }
+        }
+        else {
+            res.status(401).send();
+            console.log("user not found")
+        }
+    }).catch(e => { console.log(JSON.stringify(e, null, 2)) })
+})
+app.get('/dashdata', (req, res) => {
+    let token = req.headers['x-auth'];
+    User.findOne({ token }).then((user) => {
+        if (user) {
+            if (user.isAdmin) {
+                let total = correct = inCorrect = notAnswered = 0;
+                Question.count().then((count, err) => {
+                    total = count
+                    User.count().then((count, err) => {
+                        total *= count
+                        Answer.count({ correct: true }).then((count, err) => {
+                            correct = count
+                            Answer.count({ correct: false }).then((count, err) => {
+                                inCorrect = count
+                                notAnswered = total - (correct + inCorrect);
+                                res.send({
+                                    'correct': correct,
+                                    'inCorrect': inCorrect,
+                                    'notAnswered': notAnswered
+                                })
+                            })
+                        })
+                    })
+                });
             }
             else {
                 res.status(403).send("UnAuthorized");

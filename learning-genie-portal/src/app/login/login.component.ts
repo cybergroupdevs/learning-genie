@@ -36,7 +36,7 @@ export class LoginComponent implements OnInit {
   }
   checkLogin() {
     if (localStorage.getItem('isAdmin')) {
-      this.router.navigate(['questions']);
+      this.router.navigate(['dashboard']);
     } else {
       alert('Login With an Admin Account');
       this.isLoginVisible = true;

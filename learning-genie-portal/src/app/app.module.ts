@@ -1,3 +1,4 @@
+import { DashboardService } from './dashboard.service';
 
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
@@ -17,6 +18,7 @@ import { UsersComponent } from './users/users.component';
 import { UsersService } from './users.service';
 import { QuestionsadminComponent } from './questionsadmin/questionsadmin.component';
 import { QuestionsService } from './questions.service';
+import { DashboardComponent } from './dashboard/dashboard.component';
 
 FusionChartsModule.fcRoot(FusionCharts, Charts, FintTheme);
 @NgModule({
@@ -26,6 +28,7 @@ FusionChartsModule.fcRoot(FusionCharts, Charts, FintTheme);
     UsersComponent,
     QuestionsadminComponent,
     LoginComponent,
+    DashboardComponent,
   ],
   imports: [
     BrowserModule,
@@ -35,7 +38,7 @@ FusionChartsModule.fcRoot(FusionCharts, Charts, FintTheme);
     AppRoutingModule,
     NgbModule.forRoot(),
   ],
-  providers: [ UsersService, QuestionsService, NavBarComponent],
+  providers: [ UsersService, QuestionsService, NavBarComponent, DashboardService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
