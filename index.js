@@ -249,6 +249,45 @@ app.get('/questions/:id', (req, res) => {
         }
     }).catch(e => { console.log(JSON.stringify(e, null, 2)) })
 })
+app.get('/questionsdata/:id', (req, res) => {
+    let token = req.headers['x-auth'];
+    User.findOne({ token }).then((user) => {
+        if (user) {
+            if (user.isAdmin) {
+                Question.findById(req.params.id).then((question) => {
+                    if (!question) {
+                        res.status(400).send()
+                    }
+                    else {
+                        let total=correct=inCorrect=notAnswered=0;
+                        User.count({ team: question.team}).then((count,err)=>{
+                            total=count
+                            Answer.count({q_id: req.params.id , correct: true }).then((count,err)=>{
+                                correct=count
+                                Answer.count({q_id: req.params.id , correct: false }).then((count,err)=>{
+                                    inCorrect=count
+                                    notAnswered = total - (correct + inCorrect);
+                                    res.send({
+                                        'correct' : correct,
+                                        'inCorrect' : inCorrect,
+                                        'notAnswered' : notAnswered
+                                    })
+                                })
+                            })
+                        });
+                    }
+                })
+            }
+            else {
+                res.status(403).send("UnAuthorized");
+            }
+        }
+        else {
+            res.status(401).send();
+            console.log("user not found")
+        }
+    }).catch(e => { console.log(JSON.stringify(e, null, 2)) })
+})
 app.get('/users', (req, res) => {
     let token = req.headers['x-auth'];
     User.findOne({ token }).then((user) => {
@@ -281,6 +320,45 @@ app.get('/users/:id', (req, res) => {
                         Answer.find({ u_id: req.params.id }).populate('q_id').then(answers => {
                             res.send(answers)
                         })
+                    }
+                })
+            }
+            else {
+                res.status(403).send("UnAuthorized");
+            }
+        }
+        else {
+            res.status(401).send();
+            console.log("user not found")
+        }
+    }).catch(e => { console.log(JSON.stringify(e, null, 2)) })
+})
+app.get('/usersdata/:id', (req, res) => {
+    let token = req.headers['x-auth'];
+    User.findOne({ token }).then((user) => {
+        if (user) {
+            if (user.isAdmin) {
+                User.findById(req.params.id).then((usr) => {
+                    if (!usr) {
+                        res.status(400).send()
+                    }
+                    else {
+                        let total=correct=inCorrect=notAnswered=0;
+                        Question.count({ team: usr.team}).then((count,err)=>{
+                            total=count
+                            Answer.count({u_id: req.params.id , correct: true }).then((count,err)=>{
+                                correct=count
+                                Answer.count({u_id: req.params.id , correct: false }).then((count,err)=>{
+                                    inCorrect=count
+                                    notAnswered = total - (correct + inCorrect);
+                                    res.send({
+                                        'correct' : correct,
+                                        'inCorrect' : inCorrect,
+                                        'notAnswered' : notAnswered
+                                    })
+                                })
+                            })
+                        });
                     }
                 })
             }
