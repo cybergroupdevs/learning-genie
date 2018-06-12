@@ -204,7 +204,7 @@ app.get('/questions', (req, res) => {
     User.findOne({ token }).then((user) => {
         if (user) {
             if (user.isAdmin) {
-                Question.find({}).then((questions) => {
+                Question.find({}).sort({'atTime': -1}).then((questions) => {
                     if (!questions) {
                         res.status(400).send()
                     }
@@ -233,7 +233,7 @@ app.get('/questions/:id', (req, res) => {
                         res.status(400).send()
                     }
                     else {
-                        Answer.find({ q_id: req.params.id }).populate('u_id', 'email').then(answers => {
+                        Answer.find({ q_id: req.params.id }).sort({'atTime': -1}).populate('u_id', 'email').then(answers => {
                             res.send(answers)
                         })
                     }
@@ -317,7 +317,7 @@ app.get('/users/:id', (req, res) => {
                         res.status(400).send()
                     }
                     else {
-                        Answer.find({ u_id: req.params.id }).populate('q_id').then(answers => {
+                        Answer.find({ u_id: req.params.id }).sort({'atTime': -1}).populate('q_id').then(answers => {
                             res.send(answers)
                         })
                     }
