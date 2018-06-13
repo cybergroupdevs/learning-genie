@@ -41,6 +41,16 @@ let io = socketIo(server);
 io.on('connection', (socket) => {
     console.log(socket.client.id)
     socket.emit('clientId', { "clientId": socket.client.id })
+    socket.on('setOnline', (data) => {
+        token = authHelper.getToken(data.token);
+        User.findOneAndUpdate({ token }, { $set: { status: "online" } }).then((user) => {
+            if (user) {
+                console.log(user.email, " is Online")
+            }
+            else {
+            }
+        })
+    })
     socket.on('joinroom', (data) => {
         User.findOne({ token }).then((user) => {
             if (user) {
@@ -51,6 +61,15 @@ io.on('connection', (socket) => {
             }
         })
     })
+    socket.on('disconnect', function () {
+        User.findOneAndUpdate({ token: req.session.id_token }, { $set: { status: "last seen at" + new Date().toUTCString() } }).then((user) => {
+            if (user) {
+                console.log(user.email, " is Offline")
+            }
+            else {
+            }
+        })
+    });
 })
 app.get('/login', (req, res) => {
     res.redirect(`${authHelper.getAuthUri()}`);
@@ -204,7 +223,7 @@ app.get('/questions', (req, res) => {
     User.findOne({ token }).then((user) => {
         if (user) {
             if (user.isAdmin) {
-                Question.find({}).sort({'atTime': -1}).then((questions) => {
+                Question.find({}).sort({ 'atTime': -1 }).then((questions) => {
                     if (!questions) {
                         res.status(400).send()
                     }
@@ -233,7 +252,7 @@ app.get('/questions/:id', (req, res) => {
                         res.status(400).send()
                     }
                     else {
-                        Answer.find({ q_id: req.params.id }).sort({'atTime': -1}).populate('u_id', 'email').then(answers => {
+                        Answer.find({ q_id: req.params.id }).sort({ 'atTime': -1 }).populate('u_id', 'email').then(answers => {
                             res.send(answers)
                         })
                     }
@@ -317,7 +336,7 @@ app.get('/users/:id', (req, res) => {
                         res.status(400).send()
                     }
                     else {
-                        Answer.find({ u_id: req.params.id }).sort({'atTime': -1}).populate('q_id').then(answers => {
+                        Answer.find({ u_id: req.params.id }).sort({ 'atTime': -1 }).populate('q_id').then(answers => {
                             res.send(answers)
                         })
                     }
