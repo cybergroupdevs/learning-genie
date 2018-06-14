@@ -92,6 +92,6 @@ answer.addEventListener('click', (event) => {
   const modalPath = path.join(__dirname, '../views/answer.html')
   let win = new BrowserWindow({ width: 500, height: 500, alwaysOnTop: true })
   win.on('close', function () { win = null })
-  win.loadURL(modalPath)
+  win.loadURL(`file://` + modalPath)
   win.show()
 });
