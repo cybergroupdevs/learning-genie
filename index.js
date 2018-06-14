@@ -41,16 +41,6 @@ let io = socketIo(server);
 io.on('connection', (socket) => {
     console.log(socket.client.id)
     socket.emit('clientId', { "clientId": socket.client.id })
-    socket.on('setOnline', (data) => {
-        token = authHelper.getToken(data.token);
-        User.findOneAndUpdate({ token }, { $set: { status: "online" } }).then((user) => {
-            if (user) {
-                console.log(user.email, " is Online")
-            }
-            else {
-            }
-        })
-    })
     socket.on('joinroom', (data) => {
         User.findOne({ token }).then((user) => {
             if (user) {
@@ -62,13 +52,6 @@ io.on('connection', (socket) => {
         })
     })
     socket.on('disconnect', function () {
-        User.findOneAndUpdate({ token: req.session.id_token }, { $set: { status: "last seen at" + new Date().toUTCString() } }).then((user) => {
-            if (user) {
-                console.log(user.email, " is Offline")
-            }
-            else {
-            }
-        })
     });
 })
 app.get('/login', (req, res) => {
