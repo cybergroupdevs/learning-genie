@@ -9,26 +9,27 @@ const store = new Store({
     token:''
   }
 });
+const url='https://learning-genie777.herokuapp.com'
 const BrowserWindow = electron.remote.BrowserWindow;
-const socket = io('https://learning-genie777.herokuapp.com');
+const socket = io(url);
 const { remote } = require('electron')
 const msgs = document.getElementById('msg-bubble');
 const msgtxt = document.getElementById('msg')
 const opt = document.getElementById('options')
 const snooze = document.getElementById('snz');
 const answer = document.getElementById('ans');
-const currentWin = remote.BrowserWindow.getFocusedWindow();
+const currentWin = remote.BrowserWindow.getFocusedWindow(); 
 let ques;
 let token;
 
-currentWin.hide();
 socket.on('connect', () => {
   console.log("connected to server")
+  currentWin.hide();
   if (!store.get('token')) {
     console.log('no token found')
     let win = new BrowserWindow({ width: 800, height: 500, autoHideMenuBar: true, alwaysOnTop: true })
     win.on('close', function () {
-      axios.get('https://learning-genie777.herokuapp.com/getuser').then((data) => {
+      axios.get(url+'/getuser').then((data) => {
         token = JSON.stringify(data.data.token);
         store.set('token', JSON.stringify(token))
       }).catch((e) => {
@@ -37,7 +38,7 @@ socket.on('connect', () => {
       })
       win = null
     })
-    win.loadURL('https://learning-genie777.herokuapp.com/login')
+    win.loadURL(url+'/login')
     win.show()
   }
   else { token = store.get('token') }

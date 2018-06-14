@@ -2,6 +2,7 @@ const electron = require('electron')
 const axios = require('axios')
 const path = require('path')
 const fs = require('fs')
+const AutoLaunch = require('auto-launch');
 const url = require('url')
 const app = electron.app
 
@@ -56,7 +57,17 @@ function createWindow() {
   })
 }
 
-app.on('ready', createWindow)
+app.on('ready', ()=>{
+  createWindow();
+  console.log(app.getPath('exe'))
+  let autoLaunch = new AutoLaunch({
+    name: 'Learning Genie',
+    path: app.getPath('exe'),
+  });
+  autoLaunch.isEnabled().then((isEnabled) => {
+    if (!isEnabled) autoLaunch.enable();
+  });  
+})
 
 // Quit when all windows are closed.
 app.on('window-all-closed', (e) => {
