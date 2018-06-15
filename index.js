@@ -13,7 +13,7 @@ var session = require('express-session')(
         secret: '0dc529ba-5051-4cd6-8b67-c9a901bb8bdf',
         resave: false,
         saveUninitialized: false,
-        cookie: { httpOnly: false }
+        cookie: { httpOnly: false, domain: 'localhost:4200'}
     });
 
 const { Answer } = require('./models/Answer')
