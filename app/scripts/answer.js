@@ -12,23 +12,34 @@ const currentWin = remote.BrowserWindow.getFocusedWindow();
 axios.defaults.headers.common['x-auth']= token;
 const submit = document.getElementById('submit');
 const cancel = document.getElementById('cancel');
+let answer = document.getElementById('answer'); 
 submit.addEventListener('click', (event) => {
-    let answer = document.getElementById('answer');
-    axios.post('https://learning-genie777.herokuapp.com/answer', {
-        ans: answer.value,
-        q_id: ques._id,
-        clientId: cid
-    }).then((res) => {
-        if (res.status == 200) {
-            alert("Your Response is Recorded :)");
-            currentWin.close();
-            store.set('question', null)
-        }
-        else {
-            alert("Something Went Wrong :(")
-        }
-    })
+    answer = document.getElementById('answer');
+    subAns(answer.value)
 })
 cancel.addEventListener('click', (event) => {
     currentWin.close();
 })
+answer.addEventListener('keypress', (event)=>{
+    if(event.keyCode==13)
+    {   
+        answer = document.getElementById('answer');
+        subAns(answer.value);
+    }
+})
+const subAns = (answer) => {
+    axios.post('https://learning-genie777.herokuapp.com/answer', {
+            ans: answer,
+            q_id: ques._id,
+            clientId: cid
+        }).then((res) => {
+            if (res.status == 200) {
+                alert("Your Response is Recorded :)");
+                currentWin.close();
+                store.set('question', null)
+            }
+            else {
+                alert("Something Went Wrong :(")
+            }
+        })
+} 
