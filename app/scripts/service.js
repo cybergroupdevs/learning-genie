@@ -22,6 +22,14 @@ const currentWin = remote.BrowserWindow.getFocusedWindow();
 let ques;
 let token;
 
+socket.on('error', function() {
+  // wait 5 seconds then try again
+  if (!socket.socket.connected) {
+    setTimeout(() => {
+    socket.connect(url);
+    }, 3000)
+  }
+});
 socket.on('connect', () => {
   console.log("connected to server")
   currentWin.hide();
@@ -63,31 +71,31 @@ socket.on("submitted",()=>{
   currentWin.hide();
 })
 
-// snooze.addEventListener('click', (event) => {
-//   var pos = currentWin.getPosition();
-//   if ((pos[0] < screen.width - 600) && (pos[1] < screen.height - 325)) {
-//     pos[0] = screen.width - 600;
-//     pos[1] = 0;
-//   }
-//   else if ((pos[0] >= screen.width - 600) && (pos[1] < screen.height - 325)) {
-//     pos[0] = screen.width - 600;
-//     pos[1] = screen.height - 325;
-//   }
-//   else if ((pos[0] >= screen.width - 600) && (pos[1] >= screen.height - 325)) {
-//     pos[0] = 0;
-//     pos[1] = screen.height - 325;
-//   }
-//   else if ((pos[0] < screen.width - 600) && (pos[1] >= screen.height - 325)) {
-//     pos[0] = 0;
-//     pos[1] = 0;
-//   }
-//   console.log("snz btn clicked")
-//   currentWin.hide();
-//   setTimeout(() => {
-//     currentWin.setPosition(pos[0], pos[1])
-//     currentWin.show();
-//   }, 3000)
-// })
+snooze.addEventListener('click', (event) => {
+  var pos = currentWin.getPosition();
+  if ((pos[0] < screen.width - 600) && (pos[1] < screen.height - 325)) {
+    pos[0] = screen.width - 600;
+    pos[1] = 0;
+  }
+  else if ((pos[0] >= screen.width - 600) && (pos[1] < screen.height - 325)) {
+    pos[0] = screen.width - 600;
+    pos[1] = screen.height - 325;
+  }
+  else if ((pos[0] >= screen.width - 600) && (pos[1] >= screen.height - 325)) {
+    pos[0] = 0;
+    pos[1] = screen.height - 325;
+  }
+  else if ((pos[0] < screen.width - 600) && (pos[1] >= screen.height - 325)) {
+    pos[0] = 0;
+    pos[1] = 0;
+  }
+  console.log("snz btn clicked")
+  currentWin.hide();
+  setTimeout(() => {
+    currentWin.setPosition(pos[0], pos[1])
+    currentWin.show();
+  }, 300000)
+})
 answer.addEventListener('click', (event) => {
   const modalPath = path.join(__dirname, '../views/answer.html')
   let win = new BrowserWindow({ width: 500, height: 500, alwaysOnTop: true })

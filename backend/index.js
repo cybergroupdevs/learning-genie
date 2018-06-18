@@ -15,7 +15,6 @@ var session = require('express-session')(
         saveUninitialized: false,
         cookie: { httpOnly: false }
     });
-
 const { Answer } = require('./models/Answer')
 const { mongoose } = require('./models/db');
 const { Question } = require('./models/Questions')
@@ -236,7 +235,7 @@ app.get('/questions/:id', (req, res) => {
                         res.status(400).send()
                     }
                     else {
-                        Answer.find({ q_id: req.params.id }).sort({ 'atTime': -1 }).populate('u_id', 'email').then(answers => {
+                        Answer.find({ q_id: req.params.id }).sort({ 'atTime': +1 }).populate('u_id', 'email').then(answers => {
                             res.send(answers)
                         })
                     }
