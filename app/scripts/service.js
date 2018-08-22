@@ -1,4 +1,4 @@
-const electron = require('electron');
+const electron  = require('electron');
 const path = require('path');
 const axios = require('axios')
 const $ = require('jquery')
@@ -9,12 +9,13 @@ const store = new Store({
     token:''
   }
 });
+const io = require('socket.io-client');
 const url='https://learning-genie777.herokuapp.com'
 const BrowserWindow = electron.remote.BrowserWindow;
 const socket = io(url);
 const { remote } = require('electron')
 const msgs = document.getElementById('msg-bubble');
-const msgtxt = document.getElementById('msg')
+const msgtxt = document.getElementById('msg');
 const opt = document.getElementById('options')
 const snooze = document.getElementById('snz');
 const answer = document.getElementById('ans');

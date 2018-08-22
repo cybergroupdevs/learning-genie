@@ -55,6 +55,7 @@ function createWindow() {
   win.on('closed', () => {
     win = null
   })
+  win.setIgnoreMouseEvents(true);
 }
 
 app.on('ready', ()=>{
