@@ -15,10 +15,10 @@ var session = require('express-session')(
         saveUninitialized: false,
         cookie: { httpOnly: false }
     });
-const { Answer } = require('./models/Answer')
-const { mongoose } = require('./models/db');
-const { Question } = require('./models/Questions')
-const { User } = require('./models/User')
+const { Answer } = require('./app/models/Answer')
+const { mongoose } = require('./app/models/db');
+const { Question } = require('./app/models/Questions')
+const { User } = require('./app/models/User')
 const authHelper = require('./authHelper')
 const app = express();
 app.use(session);
