@@ -1,4 +1,5 @@
-const mongoose=require('mongoose');
+const {mongoose} = require('./db');
+
 var AnswerSchema = new mongoose.Schema({
     ans:{
         type: String,
