@@ -1,7 +1,7 @@
-const {mongoose} = require('./db');
+const { mongoose } = require('./db');
 
 var AnswerSchema = new mongoose.Schema({
-    ans:{
+    ans: {
         type: String,
         required: true,
         minlength: 1,
@@ -12,21 +12,21 @@ var AnswerSchema = new mongoose.Schema({
         required: true,
         default: false
     },
-    q_id:{
+    q_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Question',
-        required:true
+        required: true
     },
-    u_id:{
+    u_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Users',
-        required:true
+        required: true
     },
-    atTime:{
+    atTime: {
         type: String,
-        required:true
+        required: true
     }
-}) 
+})
 
-var Answer=mongoose.model('Answers',AnswerSchema);
-module.exports={Answer}
+var Answer = mongoose.model('Answers', AnswerSchema);
+module.exports = { Answer }

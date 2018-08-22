@@ -1,10 +1,10 @@
-const {mongoose} = require('./db');
+const { mongoose } = require('./db');
 
 var UserSchema = new mongoose.Schema({
-    email :{
+    email: {
         type: String,
         required: true,
-        minlength:1,
+        minlength: 1,
         unique: true,
         trim: true
     },
@@ -13,18 +13,18 @@ var UserSchema = new mongoose.Schema({
         required: true,
         default: false
     },
-    token:{
-        type:String,
-        required:true
+    token: {
+        type: String,
+        required: true
     },
-    team :{
+    team: {
         required: true,
         type: String,
         required: true,
-        minlength:1,
+        minlength: 1,
         trim: true
     }
-}) 
+})
 
-var User=mongoose.model('Users',UserSchema);
-module.exports={User}
+var User = mongoose.model('Users', UserSchema);
+module.exports = { User }
