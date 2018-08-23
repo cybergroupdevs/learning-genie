@@ -22,6 +22,7 @@ const answer = document.getElementById('ans');
 const currentWin = remote.BrowserWindow.getFocusedWindow(); 
 let ques;
 let token;
+let newNotification = '';
 
 socket.on('error', function() {
   // wait 5 seconds then try again
@@ -57,7 +58,7 @@ socket.on('clientId',(cid)=>{
 })
 socket.on('newQuestion', (res) => {
   currentWin.show();
-  console.log('got a new question')
+  console.log('Got a new question')
   msgs.hidden = false;
   msgtxt.innerHTML = "got a new msg";
   setTimeout(() => {
@@ -66,6 +67,12 @@ socket.on('newQuestion', (res) => {
     msgtxt.innerHTML = res.ques;
     opt.hidden = false;
   }, 3000)
+  notification = {
+    title: "Learning Genie",
+    body: res.ques
+  }
+  newNotification = new Notification(notification.title,notification);
+  newNotification.show();
 })
 socket.on("submitted",()=>{
   msgs.hidden = true;
@@ -95,7 +102,7 @@ snooze.addEventListener('click', (event) => {
   setTimeout(() => {
     currentWin.setPosition(pos[0], pos[1])
     currentWin.show();
-  }, 3000)
+  }, 300000)
 })
 answer.addEventListener('click', (event) => {
   const modalPath = path.join(__dirname, '../views/answer.html')
@@ -105,10 +112,14 @@ answer.addEventListener('click', (event) => {
   win.show();
 });
 
-
 $(":button").mouseenter( function() {
     currentWin.setIgnoreMouseEvents(false)
   })
 $(":button").mouseleave( function() {
     currentWin.setIgnoreMouseEvents(true, {forward: true})
   })
+
+newNotification.click =() => {
+  currentWin.show();
+  currentWin.focus();
+};
