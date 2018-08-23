@@ -95,12 +95,20 @@ snooze.addEventListener('click', (event) => {
   setTimeout(() => {
     currentWin.setPosition(pos[0], pos[1])
     currentWin.show();
-  }, 300000)
+  }, 3000)
 })
 answer.addEventListener('click', (event) => {
   const modalPath = path.join(__dirname, '../views/answer.html')
   let win = new BrowserWindow({ width: 500, height: 500, alwaysOnTop: true })
   win.on('close', function () { win = null })
   win.loadURL(`file://` + modalPath)
-  win.show()
+  win.show();
 });
+
+
+$(":button").mouseenter( function() {
+    currentWin.setIgnoreMouseEvents(false)
+  })
+$(":button").mouseleave( function() {
+    currentWin.setIgnoreMouseEvents(true, {forward: true})
+  })

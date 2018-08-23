@@ -9,7 +9,7 @@ const app = electron.app
 // Module to create native browser window.
 
 const BrowserWindow = electron.BrowserWindow;
-
+app.disableHardwareAcceleration();
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win;
@@ -55,9 +55,8 @@ function createWindow() {
   win.on('closed', () => {
     win = null
   })
-  win.setIgnoreMouseEvents(true);
+  win.setIgnoreMouseEvents(true, {forward: true});
 }
-
 app.on('ready', ()=>{
   createWindow();
   console.log(app.getPath('exe'))
