@@ -9,3 +9,11 @@ else if (env === 'production') {
     process.env.MONGODB_URI = "mongodb://admin:password777@ds012578.mlab.com:12578/learning-genie";
 }
 
+function logger(env, msg, err) {
+    if (env === 'development') {
+        if (err) {
+            console.log(err);
+        }
+        console.log(msg);
+    }
+}

@@ -8,11 +8,14 @@ var dashboard = {
         let user;
         try {
             user = User.findOne({ token });
-            return await getDashDataSuccess(res, user);
+            return await cb.getDashDataSuccess(res, user);
         } catch (e) {
-            console.log(JSON.stringify(e, null, 2))
+            console.log(JSON.stringify(e, null, 2));
         }
-    },
+    }
+};
+
+const cb = {
     "getDashDataSuccess": function (res, user) {
         if (user) {
             if (user.isAdmin) {
@@ -49,8 +52,6 @@ var dashboard = {
             console.log("user not found")
         }
     }
-};
-
-module.exports = {
-    dashboard
 }
+
+module.exports = { dashboard }
