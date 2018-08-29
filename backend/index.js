@@ -5,9 +5,8 @@ const socketIo = require('socket.io');
 const http = require('http');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const _ = require('lodash');
-const { ObjectId } = require('mongodb');
-const redis = require('redis');
+// const { ObjectId } = require('mongodb');
+// const redis = require('redis');
 var session = require('express-session')(
     {
         secret: '0dc529ba-5051-4cd6-8b67-c9a901bb8bdf',
@@ -16,7 +15,7 @@ var session = require('express-session')(
         cookie: { httpOnly: false }
     });
 const { User } = require('./app/models/User')
-const authHelper = require('./authHelper')
+const authHelper = require('./app/controllers/authHelper')
 const app = express();
 app.use(session);
 app.use(function (req, res, next) {
@@ -96,11 +95,11 @@ app.get('/logincomplete', function (req, res) {
     var email = req.session.email;
 
     if (idtoken === undefined || email === undefined) {
-        console.log('/logincomplete called while not logged in');
+        process.logger('/logincomplete called while not logged in');
         res.redirect('/login');
         return;
     }
-    console.log(email);
+    process.logger(email);
     res.send(`${email} you are successfully logged in`);
 });
 
@@ -120,7 +119,7 @@ app.get('/getuser', (req, res) => {
 app.get('/refreshtokens', function (req, res) {
     var refresh_token = req.session.refresh_token;
     if (refresh_token === undefined) {
-        console.log('no refresh token in session');
+        process.logger('no refresh token in session');
         res.redirect('/login');
     }
     else {

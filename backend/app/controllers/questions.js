@@ -11,7 +11,7 @@ const question = {
             .then((user) => {
                 cb.getQuestionsSuccess(res, user);
             })
-            .catch((err) => { config.logger(config.env, undefined, err); });
+            .catch((err) => { process.logger(config.env, undefined, err); });
     },
     "getQuestionsId": function (req, res, id) {
         const token = req.headers['x-auth'];
@@ -19,7 +19,7 @@ const question = {
             .then((user) => {
                 cb.getQuestionsIdSuccess(res, user, id);
             })
-            .catch((err) => { config.logger(config.env, undefined, err); });
+            .catch((err) => { process.logger(config.env, undefined, err); });
     },
     "getQuestionsDataId": function (req, res, id) {
         const token = req.headers['x-auth'];
@@ -27,7 +27,7 @@ const question = {
             .then((user) => {
                 cb.getQuestionsDataIdSuccess(res, user, id);
             })
-            .catch((err) => { config.logger(config.env, undefined, err); });
+            .catch((err) => { process.logger(config.env, undefined, err); });
     },
     "postQuestion": function (req, res, io) {
         const token = req.headers['x-auth'];
@@ -35,7 +35,7 @@ const question = {
             .then((user) => {
                 cb.postQuestionSuccess(req, res, user, io);
             })
-            .catch((err) => { config.logger(config.env, undefined, err); });
+            .catch((err) => { process.logger(config.env, undefined, err); });
     }
 }
 
@@ -79,7 +79,7 @@ const cb = {
         }
         else {
             res.status(401).send();
-            // console.log("user not found")
+            // process.logger("user not found")
         }
     },
     "getQuestionsDataIdSuccess": (res, user, id) => {
@@ -116,7 +116,7 @@ const cb = {
         }
         else {
             res.status(401).send();
-            // console.log("user not found")
+            // process.logger("user not found")
         }
     },
     "postQuestionSuccess": (req, res, user, io) => {
@@ -132,7 +132,7 @@ const cb = {
                     }
                     else {
                         res.send({ message: 'Question Posted' });
-                        console.log('question emitted');
+                        process.logger('question emitted');
                         io.sockets.emit('newQuestion', question);
                     }
                 })

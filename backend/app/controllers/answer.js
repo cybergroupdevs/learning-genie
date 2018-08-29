@@ -10,7 +10,7 @@ var answer = {
             .then((user) => {
                 cb.postAnswerSuccess(req, res, io, user);
             })
-            .catch((err) => { config.logger(config.env, undefined, err); });
+            .catch((err) => { process.logger(config.env, undefined, err); });
     }
 }
 

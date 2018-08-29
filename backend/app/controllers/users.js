@@ -9,7 +9,7 @@ const user = {
             .then((user) => {
                 cb.getUserSuccess(res, user, id);
             })
-            .catch((err) => { config.logger(config.env, undefined, err); });
+            .catch((err) => { process.logger(config.env, undefined, err); });
     },
     "getUsers": function (req, res) {
         const token = req.headers['x-auth'];
@@ -17,7 +17,7 @@ const user = {
             .then((user) => {
                 cb.getUsersSuccess(res, user);
             })
-            .catch((err) => { config.logger(config.env, undefined, err); });
+            .catch((err) => { process.logger(config.env, undefined, err); });
     },
     "getUsersData": function (req, res, id) {
         const token = req.headers['x-auth'];
@@ -25,7 +25,7 @@ const user = {
             .then((user) => {
                 cb.getUsersDataSuccess(res, user, id);
             })
-            .catch((err) => { config.logger(config.env, undefined, err); });
+            .catch((err) => { process.logger(config.env, undefined, err); });
     }
 }
 

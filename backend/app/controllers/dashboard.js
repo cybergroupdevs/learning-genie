@@ -7,7 +7,7 @@ var dashboard = {
         let token = req.headers['x-auth'];
         User.findOne({ token })
             .then((user) => { cb.getDashDataSuccess(res, user); })
-            .catch((err) => { config.logger(config.env, undefined, err); })
+            .catch((err) => { process.logger(config.env, undefined, err); })
     }
 };
 
