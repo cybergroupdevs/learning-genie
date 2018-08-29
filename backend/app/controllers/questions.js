@@ -1,150 +1,187 @@
-const _ = require('lodash');
+const {pick} = require('lodash');
 
-const { Answer, Question, User } = require('../models');
-
-const config = require("../../config/config");
+const {Answer, Question, User} = require('../models');
 
 const question = {
-    "getQuestions": function (req, res) {
+    getQuestions: function (req, res) {
         const token = req.headers['x-auth'];
-        User.findOne({ token })
+        User
+            .findOne({token})
             .then((user) => {
                 cb.getQuestionsSuccess(res, user);
             })
-            .catch((err) => { process.logger(config.env, undefined, err); });
+            .catch((err) => {
+                process.logger(undefined, err);
+            });
     },
-    "getQuestionsId": function (req, res, id) {
+    getQuestionsId: function (req, res, id) {
         const token = req.headers['x-auth'];
-        User.findOne({ token })
+        User
+            .findOne({token})
             .then((user) => {
                 cb.getQuestionsIdSuccess(res, user, id);
             })
-            .catch((err) => { process.logger(config.env, undefined, err); });
+            .catch((err) => {
+                process.logger(undefined, err);
+            });
     },
-    "getQuestionsDataId": function (req, res, id) {
+    getQuestionsDataId: function (req, res, id) {
         const token = req.headers['x-auth'];
-        User.findOne({ token })
+        User
+            .findOne({token})
             .then((user) => {
                 cb.getQuestionsDataIdSuccess(res, user, id);
             })
-            .catch((err) => { process.logger(config.env, undefined, err); });
+            .catch((err) => {
+                process.logger(undefined, err);
+            });
     },
-    "postQuestion": function (req, res, io) {
+    postQuestion: function (req, res, io) {
         const token = req.headers['x-auth'];
-        User.findOne({ token })
+        User
+            .findOne({token})
             .then((user) => {
                 cb.postQuestionSuccess(req, res, user, io);
             })
-            .catch((err) => { process.logger(config.env, undefined, err); });
+            .catch((err) => {
+                process.logger(undefined, err);
+            });
     }
 }
 
 const cb = {
-    "getQuestionsSuccess": (res, user) => {
+    getQuestionsSuccess: (res, user) => {
         if (user) {
             user.isAdmin === true
                 ? Question
                     .find({})
-                    .sort({ 'atTime': -1 })
+                    .sort({'atTime': -1})
                     .then((questions) => {
                         if (!questions) {
-                            res.status(400).send();
-                        }
-                        else {
-                            res.send({ questions });
+                            res
+                                .status(400)
+                                .send();
+                        } else {
+                            res.send({questions});
                         }
                     })
-                : res.status(403).send("UnAuthorized");
+                : res
+                    .status(403)
+                    .send("UnAuthorized");
         } else {
-            res.status(401).send();
+            res
+                .status(401)
+                .send();
         }
     },
-    "getQuestionsIdSuccess": function (res, user, id) {
+    getQuestionsIdSuccess: function (res, user, id) {
         if (user) {
             user.isAdmin === true
-                ? Question.findById(id)
+                ? Question
+                    .findById(id)
                     .then((question) => {
                         if (!question) {
-                            res.status(400).send();
-                        }
-                        else {
+                            res
+                                .status(400)
+                                .send();
+                        } else {
                             Answer
-                                .find({ q_id: id })
-                                .sort({ 'atTime': +1 })
+                                .find({q_id: id})
+                                .sort({
+                                    'atTime': + 1
+                                })
                                 .populate('u_id', 'email')
-                                .then(answers => { res.send(answers); });
+                                .then(answers => {
+                                    res.send(answers);
+                                });
                         }
                     })
-                : res.status(403).send("UnAuthorized");
-        }
-        else {
-            res.status(401).send();
+                : res
+                    .status(403)
+                    .send("UnAuthorized");
+        } else {
+            res
+                .status(401)
+                .send();
             // process.logger("user not found")
         }
     },
-    "getQuestionsDataIdSuccess": (res, user, id) => {
+    getQuestionsDataIdSuccess: (res, user, id) => {
         if (user) {
             user.isAdmin === true
-                ? Question.findById(id).then((question) => {
-                    if (!question) {
-                        res.status(400).send();
-                    }
-                    else {
-                        let total = correct = inCorrect = notAnswered = 0;
-                        User.count({ team: question.team }).then((count, err) => {
-                            total = count;
-                            Answer
-                                .count({ q_id: id, correct: true })
+                ? Question
+                    .findById(id)
+                    .then((question) => {
+                        if (!question) {
+                            res
+                                .status(400)
+                                .send();
+                        } else {
+                            let total = correct = inCorrect = notAnswered = 0;
+                            User
+                                .count({team: question.team})
                                 .then((count, err) => {
-                                    correct = count;
+                                    total = count;
                                     Answer
-                                        .count({ q_id: id, correct: false })
+                                        .count({q_id: id, correct: true})
                                         .then((count, err) => {
-                                            inCorrect = count
-                                            notAnswered = total - (correct + inCorrect);
-                                            res.send({
-                                                'correct': correct,
-                                                'inCorrect': inCorrect,
-                                                'notAnswered': notAnswered
-                                            })
+                                            correct = count;
+                                            Answer
+                                                .count({q_id: id, correct: false})
+                                                .then((count, err) => {
+                                                    inCorrect = count
+                                                    notAnswered = total - (correct + inCorrect);
+                                                    res.send({'correct': correct, 'inCorrect': inCorrect, 'notAnswered': notAnswered})
+                                                })
                                         })
-                                })
-                        });
-                    }
-                })
-                : res.status(403).send("UnAuthorized");
-        }
-        else {
-            res.status(401).send();
+                                });
+                        }
+                    })
+                : res
+                    .status(403)
+                    .send("UnAuthorized");
+        } else {
+            res
+                .status(401)
+                .send();
             // process.logger("user not found")
         }
     },
-    "postQuestionSuccess": (req, res, user, io) => {
+    postQuestionSuccess: (req, res, user, io) => {
         if (user) {
             if (user.isAdmin) {
-                let body = _.pick(req.body, ['ques', 'keys', 'team']);
+                let body = pick(req.body, ['ques', 'keys', 'team']);
                 body.atTime = new Date().getTime();
                 let question = new Question(body)
-                question.save().then((question) => {
-                    if (!question) {
-                        res.status(404).send();
-                        res.end();
-                    }
-                    else {
-                        res.send({ message: 'Question Posted' });
-                        process.logger('question emitted');
-                        io.sockets.emit('newQuestion', question);
-                    }
-                })
+                question
+                    .save()
+                    .then((question) => {
+                        if (!question) {
+                            res
+                                .status(404)
+                                .send();
+                            res.end();
+                        } else {
+                            res.send({message: 'Question Posted'});
+                            process.logger('question emitted');
+                            io
+                                .sockets
+                                .emit('newQuestion', question);
+                        }
+                    })
+            } else {
+                res
+                    .status(403)
+                    .send();
             }
-            else {
-                res.status(403).send();
-            }
-        }
-        else {
-            res.status(401).send();
+        } else {
+            res
+                .status(401)
+                .send();
         }
     }
 }
 
-module.exports = { question }
+module.exports = {
+    question
+}

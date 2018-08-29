@@ -1,32 +1,27 @@
-require('./config/config')
+require('./config/config');
 
-const express = require('express')
+const app = require('express')();
 const socketIo = require('socket.io');
 const http = require('http');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 
-let session = require('express-session')(
-    {
-        secret: '0dc529ba-5051-4cd6-8b67-c9a901bb8bdf',
-        resave: false,
-        saveUninitialized: false,
-        cookie: { httpOnly: false }
-    });
+let session = require('express-session')({
+    secret: '0dc529ba-5051-4cd6-8b67-c9a901bb8bdf',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        httpOnly: false
+    }
+});
 
-const { User } = require('./app/models/User');
+const {User} = require('./app/models/User');
 
-const app = express();
-
-const { answer } = require("./app/controllers");
-const { question } = require("./app/controllers");
-const { user } = require("./app/controllers");
-const { dashboard } = require("./app/controllers");
-const { authHelper } = require('./app/controllers');
+const {answer, question, user, dashboard, authHelper} = require('./app/controllers');
 
 app.use(session);
 
-app.use(function (req, res, next) {
+app.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, X-Auth");
     next();
@@ -40,24 +35,27 @@ app.use(bodyParser.json());
 
 let founduser;
 
-const server = http.createServer(app).listen(port, (p) => {
-    process.logger(`app live on ${port}`);
-});
+const server = http
+    .createServer(app)
+    .listen(port, (p) => {
+        process.logger(`app live on ${port}`);
+    });
 
 let io = socketIo(server);
 
 io.on('connection', (socket) => {
     process.logger(socket.client.id);
-    socket.emit('clientId', { "clientId": socket.client.id })
+    socket.emit('clientId', {"clientId": socket.client.id})
     socket.on('joinroom', (data) => {
-        User.findOne({ token }).then((user) => {
-            if (user) {
-                socket.join(user.team)
-            }
-            else {
-                socket.emit('roomjoinfailed');
-            }
-        })
+        User
+            .findOne({token})
+            .then((user) => {
+                if (user) {
+                    socket.join(user.team)
+                } else {
+                    socket.emit('roomjoinfailed');
+                }
+            })
     })
     socket.on('disconnect', function (req, res) {
         // req.session.destroy();
@@ -80,31 +78,30 @@ function tokenReceived(req, res, error, token) {
     if (error) {
         process.logger('ERROR getting token:' + error);
         res.send('ERROR getting token: ' + error);
-    }
-    else {
+    } else {
         // save tokens in session
         req.session.email = authHelper.getEmailFromIdToken(token.token.id_token);
-        User.findOne({ 'email': req.session.email }, function (err, founduser) {
+        User.findOne({
+            'email': req.session.email
+        }, function (err, founduser) {
             if (founduser) {
                 req.session.idtoken = founduser.token;
                 req.session.isAdmin = founduser.isAdmin;
-            }
-            else {
+            } else {
                 req.session.idtoken = token.token.id_token;
                 req.session.isAdmin = false;
-                let user = new User({
-                    token: req.session.idtoken,
-                    email: req.session.email,
-                    team: 'abc'
-                })
-                user.save().then((user) => { }).catch(e => process.logger(e))
+                let user = new User({token: req.session.idtoken, email: req.session.email, team: 'abc'})
+                user
+                    .save()
+                    .then((user) => {})
+                    .catch(e => process.logger(e))
             }
             res.redirect('/logincomplete')
         })
     }
 }
 
-app.get('/logincomplete', function (req, res) {
+app.get('/logincomplete', (req, res) => {
     authHelper.loginComplete(req, res);
 });
 
@@ -112,11 +109,11 @@ app.get('/getuser', (req, res) => {
     authHelper.getUser(req, res);
 });
 
-app.get('/refreshtokens', function (req, res) {
+app.get('/refreshtokens', (req, res) => {
     authHelper.refreshTokens(req, res, tokenReceived);
 });
 
-app.get('/logout', function (req, res) {
+app.get('/logout', (req, res) => {
     authHelper.doLogout(req, res);
 });
 
