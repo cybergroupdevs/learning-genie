@@ -60,13 +60,13 @@ io.on('connection', (socket) => {
         })
     })
     socket.on('disconnect', function (req, res) {
-        req.session.destroy();
+        // req.session.destroy();
     });
-})
+});
 
 app.get('/', (req, res) => {
     res.send('Welcome to learning Genie');
-})
+});
 
 app.get('/login', (req, res) => {
     authHelper.doLogin(res);
@@ -123,7 +123,7 @@ app.get('/logout', function (req, res) {
 app.post('/answer', (req, res) => {
     let token = authHelper.getToken(req.headers['x-auth']);
     answer.postAnswer(req, res, io, token);
-})
+});
 
 app.post('/question', (req, res) => {
     question.postQuestion(req, res, io);
@@ -135,10 +135,11 @@ app.get('/questions', (req, res) => {
 
 app.get('/questions/:id', (req, res) => {
     question.getQuestionsId(req, res, req.params.id);
-})
+});
+
 app.get('/questionsdata/:id', (req, res) => {
     question.getQuestionsDataId(req, res, req.params.id);
-})
+});
 
 app.get('/users', (req, res) => {
     user.getUsers(req, res);
