@@ -1,23 +1,21 @@
-const { Answer } = require('../models');
-const { Question } = require('../models');
-const { User } = require('../models');
+const _ = require('lodash');
+
+const { Answer, Question, User } = require('../models');
 
 const config = require("../../config/config");
 
 var answer = {
-    "postAnswer": function (req, res) {
-        const token = req.headers['x-auth'];
-        // token = authHelper.getToken(token);
+    "postAnswer": function (req, res, io, token) {
         User.findOne({ token })
             .then((user) => {
-                cb.postAnswerSuccess();
+                cb.postAnswerSuccess(req, res, io, user);
             })
             .catch((err) => { config.logger(config.env, undefined, err); });
     }
 }
 
 var cb = {
-    "postAnswerSuccess": () => {
+    "postAnswerSuccess": (req, res, io, user) => {
         if (user) {
             let body = _.pick(req.body, ['q_id', 'ans']);
             body.u_id = user._id

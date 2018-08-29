@@ -1,6 +1,4 @@
-const { Answer } = require('../models');
-const { Question } = require('../models');
-const { User } = require('../models');
+const { Answer, Question, User } = require('../models');
 
 const config = require("../../config/config");
 

@@ -138,7 +138,9 @@ app.get('/', (req, res) => {
 
 const { answer } = require("./app/controllers");
 app.post('/answer', (req, res) => {
-    answer.postAnswer(req, res);
+    let token = req.headers['x-auth'];
+    token = authHelper.getToken(token);
+    answer.postAnswer(req, res, io, token);
 })
 
 const { question } = require("./app/controllers");
