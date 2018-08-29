@@ -7,4 +7,4 @@ backend/node_modules/
 learning-genie-portal/node_modules/
 
 .vscode/
-*.DS_STORE
+*.DS_Store
