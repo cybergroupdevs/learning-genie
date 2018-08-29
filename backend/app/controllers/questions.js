@@ -29,11 +29,11 @@ const question = {
             })
             .catch((err) => { config.logger(config.env, undefined, err); });
     },
-    "postQuestion": function (req, res) {
+    "postQuestion": function (req, res, io) {
         const token = req.headers['x-auth'];
         User.findOne({ token })
             .then((user) => {
-                cb.postQuestionSuccess(req, res, user);
+                cb.postQuestionSuccess(req, res, user, io);
             })
             .catch((err) => { config.logger(config.env, undefined, err); });
     }
@@ -119,7 +119,7 @@ const cb = {
             // console.log("user not found")
         }
     },
-    "postQuestionSuccess": (req, res, user) => {
+    "postQuestionSuccess": (req, res, user, io) => {
         if (user) {
             if (user.isAdmin) {
                 let body = _.pick(req.body, ['ques', 'keys', 'team']);

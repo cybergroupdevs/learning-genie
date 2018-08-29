@@ -146,7 +146,7 @@ app.post('/answer', (req, res) => {
 const { question } = require("./app/controllers");
 
 app.post('/question', (req, res) => {
-    question.postQuestion(req, res);
+    question.postQuestion(req, res, io);
 });
 
 app.get('/questions', (req, res) => {
