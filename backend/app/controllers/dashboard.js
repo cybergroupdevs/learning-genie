@@ -2,16 +2,14 @@ const { Answer } = require('../models');
 const { Question } = require('../models');
 const { User } = require('../models');
 
+const config = require("../../config/config");
+
 var dashboard = {
-    "getDashData": async function (req, res, next) {
+    "getDashData": function (req, res) {
         let token = req.headers['x-auth'];
-        let user;
-        try {
-            user = User.findOne({ token });
-            return await cb.getDashDataSuccess(res, user);
-        } catch (e) {
-            console.log(JSON.stringify(e, null, 2));
-        }
+        User.findOne({ token })
+            .then((user) => { cb.getDashDataSuccess(res, user); })
+            .catch((err) => { config.logger(config.env, undefined, err); })
     }
 };
 
@@ -49,7 +47,7 @@ const cb = {
         }
         else {
             res.status(401).send();
-            console.log("user not found")
+            // console.log("user not found")
         }
     }
 }

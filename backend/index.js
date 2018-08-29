@@ -15,9 +15,6 @@ var session = require('express-session')(
         saveUninitialized: false,
         cookie: { httpOnly: false }
     });
-const { Answer } = require('./app/models/Answer')
-const { mongoose } = require('./app/models/db');
-const { Question } = require('./app/models/Questions')
 const { User } = require('./app/models/User')
 const authHelper = require('./authHelper')
 const app = express();
@@ -29,14 +26,12 @@ app.use(function (req, res, next) {
 });
 
 const port = process.env.PORT;
-
 app.use(cors());
 app.use(bodyParser.json());
 let founduser;
 let server = http.createServer(app).listen(port, (p) => {
     console.log(`app live on ${port}`);
 });
-
 let io = socketIo(server);
 io.on('connection', (socket) => {
     console.log(socket.client.id)
@@ -140,194 +135,43 @@ app.get('/logout', function (req, res) {
 app.get('/', (req, res) => {
     res.send('Welcome to learning Genie')
 })
-app.post('/question', (req, res) => {
-    let token = req.headers['x-auth'];
-    User.findOne({ token }).then((user) => {
-        if (user) {
-            if (user.isAdmin) {
-                let body = _.pick(req.body, ['ques', 'keys', 'team']);
-                body.atTime = new Date().getTime();
-                let question = new Question(body)
-                question.save().then((question) => {
-                    if (!question) {
-                        res.status(404).send();
-                        res.end();
-                    }
-                    else {
-                        res.send({ message: 'Question Posted' });
-                        console.log('question emitted');
-                        io.sockets.emit('newQuestion', question);
-                    }
-                })
-            }
-            else {
-                res.status(403).send();
-            }
-        }
-        else {
-            res.status(401).send();
-            console.log("user not found")
-        }
-    }).catch(e => { console.log(JSON.stringify(e, null, 2)) })
-})
-app.post('/answer', (req, res) => {
-    let token = req.headers['x-auth'];
-    token = authHelper.getToken(token);
-    User.findOne({ token }).then((user) => {
-        if (user) {
-            let body = _.pick(req.body, ['q_id', 'ans']);
-            body.u_id = user._id
-            body.atTime = new Date().getTime()
-            let answer = new Answer(body)
-            Question.checkAns(body).then((resp) => {
-                answer.correct = resp
-                answer.save().then((ans) => {
-                    if (ans) {
-                        res.send("response submitted");
-                        res.end();
-                        io.to(req.body.clientId).emit("submitted")
-                    }
-                    else {
-                        res.status(404).send("error");
-                        res.end();
-                    }
-                })
-            })
 
-        }
-        else {
-            res.status(401).send();
-            console.log("user not found")
-        }
-    }).catch(e => { console.log("error:", JSON.stringify(e, null, 2)) })
+const { answer } = require("./app/controllers");
+app.post('/answer', (req, res) => {
+    answer.postAnswer(req, res);
 })
+
+const { question } = require("./app/controllers");
+
+app.post('/question', (req, res) => {
+    question.postQuestion(req, res);
+});
+
 app.get('/questions', (req, res) => {
-    let token = req.headers['x-auth'];
-    User.findOne({ token }).then((user) => {
-        if (user) {
-            if (user.isAdmin) {
-                Question.find({}).sort({ 'atTime': -1 }).then((questions) => {
-                    if (!questions) {
-                        res.status(400).send()
-                    }
-                    else {
-                        res.send({ questions })
-                    }
-                })
-            }
-            else {
-                res.status(403).send("UnAuthorized");
-            }
-        }
-        else {
-            res.status(401).send();
-            console.log("user not found")
-        }
-    }).catch(e => { console.log(JSON.stringify(e, null, 2)) })
-})
+    question.getQuestions(req, res);
+});
+
 app.get('/questions/:id', (req, res) => {
-    let token = req.headers['x-auth'];
-    User.findOne({ token }).then((user) => {
-        if (user) {
-            if (user.isAdmin) {
-                Question.findById(req.params.id).then((question) => {
-                    if (!question) {
-                        res.status(400).send()
-                    }
-                    else {
-                        Answer.find({ q_id: req.params.id }).sort({ 'atTime': +1 }).populate('u_id', 'email').then(answers => {
-                            res.send(answers)
-                        })
-                    }
-                })
-            }
-            else {
-                res.status(403).send("UnAuthorized");
-            }
-        }
-        else {
-            res.status(401).send();
-            console.log("user not found")
-        }
-    }).catch(e => { console.log(JSON.stringify(e, null, 2)) })
+    question.getQuestionsId(req, res, req.params.id);
 })
 app.get('/questionsdata/:id', (req, res) => {
-    let token = req.headers['x-auth'];
-    User.findOne({ token }).then((user) => {
-        if (user) {
-            if (user.isAdmin) {
-                Question.findById(req.params.id).then((question) => {
-                    if (!question) {
-                        res.status(400).send()
-                    }
-                    else {
-                        let total = correct = inCorrect = notAnswered = 0;
-                        User.count({ team: question.team }).then((count, err) => {
-                            total = count
-                            Answer.count({ q_id: req.params.id, correct: true }).then((count, err) => {
-                                correct = count
-                                Answer.count({ q_id: req.params.id, correct: false }).then((count, err) => {
-                                    inCorrect = count
-                                    notAnswered = total - (correct + inCorrect);
-                                    res.send({
-                                        'correct': correct,
-                                        'inCorrect': inCorrect,
-                                        'notAnswered': notAnswered
-                                    })
-                                })
-                            })
-                        });
-                    }
-                })
-            }
-            else {
-                res.status(403).send("UnAuthorized");
-            }
-        }
-        else {
-            res.status(401).send();
-            console.log("user not found")
-        }
-    }).catch(e => { console.log(JSON.stringify(e, null, 2)) })
+    question.getQuestionsDataId(req, res, req.params.id);
 })
 
 const { user } = require("./app/controllers");
 app.get('/users', (req, res) => {
-    user.getUsers(req, res, next);
+    user.getUsers(req, res);
 });
 
 app.get('/users/:id', (req, res) => {
-    let token = req.headers['x-auth'];
-    User.findOne({ token }).then((user) => {
-        if (user) {
-            if (user.isAdmin) {
-                User.findById(req.params.id).then((usr) => {
-                    if (!usr) {
-                        res.status(400).send()
-                    }
-                    else {
-                        Answer.find({ u_id: req.params.id }).sort({ 'atTime': -1 }).populate('q_id').then(answers => {
-                            res.send(answers)
-                        })
-                    }
-                })
-            }
-            else {
-                res.status(403).send("UnAuthorized");
-            }
-        }
-        else {
-            res.status(401).send();
-            console.log("user not found")
-        }
-    }).catch(e => { console.log(JSON.stringify(e, null, 2)) })
-})
+    user.getUser(req, res, req.params.id);
+});
 
 app.get('/usersdata/:id', (req, res) => {
-    user.usersdata_id(req, res, next);
+    user.getUsersData(req, res, req.params.id);
 })
 
 const { dashboard } = require("./app/controllers");
 app.get('/dashdata', (req, res) => {
-    dashboard.getDashData(req, res, next);
+    dashboard.getDashData(req, res);
 });
