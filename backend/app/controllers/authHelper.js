@@ -1,9 +1,9 @@
-var clientId = '00466414-78cb-46f9-a8f7-3a366b52293e';
-var clientSecret = 'bqmqRFH6239%-jwyCSQL8!$';
-var redirectUri = 'https://learning-genie777.herokuapp.com/authorize';
-var scopes = ['openid','profile','offline_access'];
+const clientId = '00466414-78cb-46f9-a8f7-3a366b52293e';
+const clientSecret = 'bqmqRFH6239%-jwyCSQL8!$';
+const redirectUri = 'https://learning-genie777.herokuapp.com/authorize';
+const scopes = ['openid', 'profile', 'offline_access'];
 
-var credentials = {
+const credentials = {
     client: {
         id: clientId,
         secret: clientSecret,
@@ -14,7 +14,9 @@ var credentials = {
         tokenPath: 'common/oauth2/token'
     }
 };
-var oauth2 = require('simple-oauth2').create(credentials)
+
+const oauth2 = require('simple-oauth2').create(credentials)
+
 module.exports = {
     getAuthUri: function () {
         var returnVal = oauth2.authorizationCode.authorizeURL({
@@ -23,12 +25,12 @@ module.exports = {
         });
         return returnVal;
     },
-    getTokenFromCode: (auth_code, callback, request, response)=> {
+    getTokenFromCode: (auth_code, callback, request, response) => {
         oauth2.authorizationCode.getToken({
             code: auth_code,
             redirect_uri: redirectUri,
             scope: scopes
-        },(error, result)=> {
+        }, (error, result) => {
             if (error) {
                 console.log('Access token error: ', error.message);
                 callback(request, response, error, null);
@@ -56,17 +58,64 @@ module.exports = {
         var token = oauth2.accessToken.create({ refresh_token: refresh_token, expires_in: 0 });
         token.refresh(function (error, result) {
             if (error) {
-                console.log('Refresh token error: ', error.message);
+                process.logger('Refresh token error: ', error.message);
                 callback(request, response, error, null);
             }
             else {
-                console.log('New token: ', result.token);
+                process.logger('New token: ', result.token);
                 callback(request, response, null, result);
             }
         });
     },
-    getToken: function(token) {
-        let length= token.length;
-        return token= token.substr(3,length-6);
+    getToken: function (token) {
+        let length = token.length;
+        return token = token.substr(3, length - 6);
+    },
+    getUser: function (req, res) {
+        req.session.idtoken !== undefined
+            ? res.send({
+                token: req.session.idtoken,
+                email: req.session.email,
+                isAdmin: req.session.isAdmin
+            })
+            : res.status(404).send("user not found");
+    },
+    doLogin: function (res) {
+        const redirectURL = this.getAuthUri();
+        res.redirect(redirectURL);
+    },
+    doLogout: function (req, res) {
+        req.session.destroy();
+        res.redirect('/');
+    },
+    refreshTokens: function (req, res, callback) {
+        const { refresh_token } = req.session;
+        refresh_token !== undefined
+            ? getTokenFromRefreshToken(refresh_token, callback, req, res)
+            : (() => {
+                process.logger('no refresh token in session');
+                this.doLogin(res)
+            })();
+    },
+    authorize: function (req, res, callback) {
+        const authCode = req.query.code;
+        authCode !== undefined
+            ? this.getTokenFromCode(authCode, callback, req, res)
+            : (() => {
+                // redirect to home
+                process.logger('/authorize called without a code parameter, redirecting to login');
+                this.doLogin(res);
+            })();
+    },
+    loginComplete: function (req, res) {
+        const { idtoken, email } = req.session;
+
+        if (idtoken === undefined || email === undefined) {
+            process.logger('/logincomplete called while not logged in');
+            res.redirect('/login');
+            return;
+        }
+        process.logger(email);
+        res.send(`${email} you are successfully logged in`);
     }
 }

@@ -18,7 +18,3 @@ process.logger = function (msg, err) {
         }
     }
 }
-
-module.exports = {
-    env
-}
