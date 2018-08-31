@@ -1,4 +1,4 @@
-require('./config/config');
+const routes = require('./app/routes');
 
 const app = require('express')();
 const socketIo = require('socket.io');
@@ -15,9 +15,7 @@ let session = require('express-session')({
     }
 });
 
-const {User} = require('./app/models/User');
-
-const {answer, question, user, dashboard, authHelper} = require('./app/controllers');
+const { User } = require('./app/models/User');
 
 app.use(session);
 
@@ -33,8 +31,6 @@ app.use(cors());
 
 app.use(bodyParser.json());
 
-let founduser;
-
 const server = http
     .createServer(app)
     .listen(port, (p) => {
@@ -45,10 +41,10 @@ let io = socketIo(server);
 
 io.on('connection', (socket) => {
     process.logger(socket.client.id);
-    socket.emit('clientId', {"clientId": socket.client.id})
+    socket.emit('clientId', { "clientId": socket.client.id })
     socket.on('joinroom', (data) => {
         User
-            .findOne({token})
+            .findOne({ token })
             .then((user) => {
                 if (user) {
                     socket.join(user.team)
@@ -62,94 +58,4 @@ io.on('connection', (socket) => {
     });
 });
 
-app.get('/', (req, res) => {
-    res.send('Welcome to learning Genie');
-});
-
-app.get('/login', (req, res) => {
-    authHelper.doLogin(res);
-});
-
-app.get('/authorize', function (req, res) {
-    authHelper.authorize(req, res, tokenReceived);
-});
-
-function tokenReceived(req, res, error, token) {
-    if (error) {
-        process.logger('ERROR getting token:' + error);
-        res.send('ERROR getting token: ' + error);
-    } else {
-        // save tokens in session
-        req.session.email = authHelper.getEmailFromIdToken(token.token.id_token);
-        User.findOne({
-            'email': req.session.email
-        }, function (err, founduser) {
-            if (founduser) {
-                req.session.idtoken = founduser.token;
-                req.session.isAdmin = founduser.isAdmin;
-            } else {
-                req.session.idtoken = token.token.id_token;
-                req.session.isAdmin = false;
-                let user = new User({token: req.session.idtoken, email: req.session.email, team: 'abc'})
-                user
-                    .save()
-                    .then((user) => {})
-                    .catch(e => process.logger(e))
-            }
-            res.redirect('/logincomplete')
-        })
-    }
-}
-
-app.get('/logincomplete', (req, res) => {
-    authHelper.loginComplete(req, res);
-});
-
-app.get('/getuser', (req, res) => {
-    authHelper.getUser(req, res);
-});
-
-app.get('/refreshtokens', (req, res) => {
-    authHelper.refreshTokens(req, res, tokenReceived);
-});
-
-app.get('/logout', (req, res) => {
-    authHelper.doLogout(req, res);
-});
-
-app.post('/answer', (req, res) => {
-    let token = authHelper.getToken(req.headers['x-auth']);
-    answer.postAnswer(req, res, io, token);
-});
-
-app.post('/question', (req, res) => {
-    question.postQuestion(req, res, io);
-});
-
-app.get('/questions', (req, res) => {
-    question.getQuestions(req, res);
-});
-
-app.get('/questions/:id', (req, res) => {
-    question.getQuestionsId(req, res, req.params.id);
-});
-
-app.get('/questionsdata/:id', (req, res) => {
-    question.getQuestionsDataId(req, res, req.params.id);
-});
-
-app.get('/users', (req, res) => {
-    user.getUsers(req, res);
-});
-
-app.get('/users/:id', (req, res) => {
-    user.getUser(req, res, req.params.id);
-});
-
-app.get('/usersdata/:id', (req, res) => {
-    user.getUsersData(req, res, req.params.id);
-})
-
-app.get('/dashdata', (req, res) => {
-    dashboard.getDashData(req, res);
-});
+app.use(routes.apiBaseUri, routes.api(app));
