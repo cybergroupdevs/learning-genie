@@ -3,6 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import axios from 'axios';
+import * as devEnv from '../../environments/environment';
+import * as prodEnv from '../../environments/environment.prod';
 
 @Component({
   selector: 'app-login',
@@ -11,7 +13,7 @@ import axios from 'axios';
 })
 export class LoginComponent implements OnInit {
   constructor(private router: Router, private navbar: NavBarComponent, private http: HttpClient) { }
-  url = 'https://learning-genie777.herokuapp.com/';
+  url = (devEnv.environment.production === false ? devEnv.environment.url : prodEnv.environment.url);
   isLoginVisible = true;
   isContinueVisible = false;
   win;

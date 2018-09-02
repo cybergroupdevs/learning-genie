@@ -2,7 +2,11 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
-const url = 'https://learning-genie777.herokuapp.com/';
+import * as devEnv from '../environments/environment';
+import * as prodEnv from '../environments/environment.prod';
+
+const url = (devEnv.environment.production === false ? devEnv.environment.url : prodEnv.environment.url);
+
 const httpOptions = {
   headers: new HttpHeaders({
     'Content-Type': 'application/json',

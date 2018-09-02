@@ -1,5 +1,6 @@
 const { Router } = require('express');
 const { answer, question, user, dashboard, authHelper } = require('../controllers');
+const { User } = require('../models');
 
 let founduser;
 

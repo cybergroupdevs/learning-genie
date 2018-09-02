@@ -1,4 +1,4 @@
-const {Answer, Question, User} = require('../models');
+const { Answer, Question, User } = require('../models');
 
 const user = {
     getUser: function (req, res, id) {
@@ -11,11 +11,12 @@ const user = {
             .catch((err) => {
                 process.logger(undefined, err);
             });
+        // User.findUser(token).then((user) => process.logger(user));
     },
     getUsers: function (req, res) {
         const token = req.headers['x-auth'];
         User
-            .findOne({token})
+            .findOne({ token })
             .then((user) => {
                 cb.getUsersSuccess(res, user);
             })
@@ -26,7 +27,7 @@ const user = {
     getUsersData: function (req, res, id) {
         const token = req.headers['x-auth'];
         User
-            .findOne({token})
+            .findOne({ token })
             .then((user) => {
                 cb.getUsersDataSuccess(req, res, user, id);
             })
@@ -49,8 +50,8 @@ const cb = {
                                 .send()
                         } else {
                             Answer
-                                .find({u_id: id})
-                                .sort({'atTime': -1})
+                                .find({ u_id: id })
+                                .sort({ 'atTime': -1 })
                                 .populate('q_id')
                                 .then(answers => {
                                     res.send(answers)
@@ -73,7 +74,7 @@ const cb = {
                 ? User
                     .find({})
                     .then((users) => {
-                        res.send({users})
+                        res.send({ users })
                     })
                 : res
                     .status(403)
@@ -98,19 +99,19 @@ const cb = {
                         } else {
                             let total = correct = inCorrect = notAnswered = 0;
                             Question
-                                .count({team: usr.team})
+                                .count({ team: usr.team })
                                 .then((count, err) => {
                                     total = count;
                                     Answer
-                                        .count({u_id: req.params.id, correct: true})
+                                        .count({ u_id: req.params.id, correct: true })
                                         .then((count, err) => {
                                             correct = count
                                             Answer
-                                                .count({u_id: req.params.id, correct: false})
+                                                .count({ u_id: req.params.id, correct: false })
                                                 .then((count, err) => {
                                                     inCorrect = count
                                                     notAnswered = total - (correct + inCorrect);
-                                                    res.send({'correct': correct, 'inCorrect': inCorrect, 'notAnswered': notAnswered})
+                                                    res.send({ 'correct': correct, 'inCorrect': inCorrect, 'notAnswered': notAnswered })
                                                 })
                                         })
                                 });

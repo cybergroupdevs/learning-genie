@@ -3,7 +3,7 @@ console.log("***env:", env)
 
 if (env === 'development') {
     process.env.PORT = 2018;
-    process.env.MONGODB_URI = "mongodb://admin:password777@ds012578.mlab.com:12578/learning-genie";
+    process.env.MONGODB_URI = "mongodb://localhost:27017/learning-genie";
 }
 else if (env === 'production') {
     process.env.MONGODB_URI = "mongodb://admin:password777@ds012578.mlab.com:12578/learning-genie";
@@ -19,6 +19,16 @@ process.logger = function (msg, err) {
     }
 }
 
+let session = require('express-session')({
+    secret: '0dc529ba-5051-4cd6-8b67-c9a901bb8bdf',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        httpOnly: false
+    }
+});
+
 module.exports = {
-    "apiBaseUri": '/'
+    "apiBaseUri": '/',
+    session
 }

@@ -1,21 +1,12 @@
-const routes = require('./app/routes');
-
 const app = require('express')();
-const socketIo = require('socket.io');
 const http = require('http');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 
-let session = require('express-session')({
-    secret: '0dc529ba-5051-4cd6-8b67-c9a901bb8bdf',
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-        httpOnly: false
-    }
-});
+const socket = require('./app/sockets');
+const routes = require('./app/routes');
 
-const { User } = require('./app/models/User');
+const { session } = require('./config/config');
 
 app.use(session);
 
@@ -25,11 +16,11 @@ app.use((req, res, next) => {
     next();
 });
 
-const port = process.env.PORT;
-
 app.use(cors());
 
 app.use(bodyParser.json());
+
+const port = process.env.PORT;
 
 const server = http
     .createServer(app)
@@ -37,25 +28,6 @@ const server = http
         process.logger(`app live on ${port}`);
     });
 
-let io = socketIo(server);
-
-io.on('connection', (socket) => {
-    process.logger(socket.client.id);
-    socket.emit('clientId', { "clientId": socket.client.id })
-    socket.on('joinroom', (data) => {
-        User
-            .findOne({ token })
-            .then((user) => {
-                if (user) {
-                    socket.join(user.team)
-                } else {
-                    socket.emit('roomjoinfailed');
-                }
-            })
-    })
-    socket.on('disconnect', function (req, res) {
-        // req.session.destroy();
-    });
-});
+socket(server);
 
 app.use(routes.apiBaseUri, routes.api(app));

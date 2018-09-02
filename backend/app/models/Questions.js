@@ -22,7 +22,7 @@ var QuestionSchema = new mongoose.Schema({
     }
 })
 QuestionSchema.statics.checkAns = async function (body) {
-    let question = await this.findById(body.q_id).catch(e => { console.log(JSON.stringify(e, null, 2)) })
+    let question = await this.findById(body.q_id).catch(e => { process.logger(JSON.stringify(e, null, 2)) })
     if (question) {
         let ans = question.keys.split(",")
         for (let i = 0; i < ans.length; i++) {
@@ -32,7 +32,20 @@ QuestionSchema.statics.checkAns = async function (body) {
         return false
     }
     else
-        console.log("Question not found")
+        process.logger("Question not found")
+}
+
+QuestionSchema.methods.findQuestion = async function (token) {
+    let question;
+    try {
+        question = await this.find({ token }).catch((err) => { process.logger(undefined, err) });
+        if (question) {
+            const ques = question.next();
+            return ques;
+        }
+    } catch (err) {
+        process.logger(undefined, err);
+    }
 }
 
 var Question = mongoose.model('Question', QuestionSchema);
