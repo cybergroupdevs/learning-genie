@@ -4,7 +4,7 @@ const { User } = require('../models');
 
 let founduser;
 
-const apiRoutes = function (router) {
+const apiRoutes = function (router, io) {
     router = Router();
 
     router.get('/', (req, res) => {

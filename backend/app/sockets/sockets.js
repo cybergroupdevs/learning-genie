@@ -1,16 +1,16 @@
 const socketIo = require('socket.io');
 
-const { User } = require('../models');
+const {User} = require('../models');
 
 const socket = function (server) {
     let io = socketIo(server);
 
     io.on('connection', (socket) => {
         process.logger(socket.client.id);
-        socket.emit('clientId', { "clientId": socket.client.id })
+        socket.emit('clientId', {"clientId": socket.client.id})
         socket.on('joinroom', (data) => {
             User
-                .findOne({ token })
+                .findOne({token})
                 .then((user) => {
                     if (user) {
                         socket.join(user.team)
@@ -23,6 +23,10 @@ const socket = function (server) {
             // req.session.destroy();
         });
     });
+
+    return io;
 }
 
-module.exports = socket;
+module.exports = {
+    socket
+};

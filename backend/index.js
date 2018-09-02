@@ -3,10 +3,10 @@ const http = require('http');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 
-const socket = require('./app/sockets');
+const {socket} = require('./app/sockets');
 const routes = require('./app/routes');
 
-const { session } = require('./config/config');
+const {session} = require('./config/config');
 
 app.use(session);
 
@@ -28,6 +28,6 @@ const server = http
         process.logger(`app live on ${port}`);
     });
 
-socket(server);
+const io = socket(server);
 
-app.use(routes.apiBaseUri, routes.api(app));
+app.use(routes.apiBaseUri, routes.api(app, io));
