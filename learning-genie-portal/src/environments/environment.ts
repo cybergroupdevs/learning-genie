@@ -5,5 +5,5 @@
 
 export const environment = {
   production: false,
-  url: 'http://localhost:2018/'
+  url: 'https://learning-genie777.herokuapp.com/'
 };

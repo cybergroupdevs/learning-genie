@@ -112,7 +112,6 @@ module.exports = {
     },
     loginComplete: function (req, res) {
         const {idtoken, email} = req.session;
-
         if (idtoken === undefined || email === undefined) {
             process.logger('/logincomplete called while not logged in');
             res.redirect('/login');
