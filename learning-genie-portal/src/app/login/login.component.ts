@@ -42,6 +42,8 @@ export class LoginComponent implements OnInit {
       alert('Login With an Admin Account');
       this.isLoginVisible = true;
       this.isContinueVisible = false;
+      localStorage.setItem('id_token', '');
+      localStorage.setItem('isAdmin', '');
     }
   }
   ngOnInit() {
