@@ -12,7 +12,7 @@ app.use(session);
 
 app.use((req, res, next) => {
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, X-Auth");
-    if(req.headers.origin == "https://app-learning-genie777.herokuapp.com")
+    if(req.headers.origin == "http://app-learning-genie777.herokuapp.com")
     {
         res.setHeader("Access-Control-Allow-Origin", req.headers.origin);
         res.header("Access-Control-Allow-Credentials", true);

@@ -30,13 +30,13 @@ export class LoginComponent implements OnInit {
       }, false);
     axios.get(this.url + 'getuser', {withCredentials: true}
   ).then((resp) => {
-    localStorage.setItem('id_token', resp['token']);
-    localStorage.setItem('isAdmin', resp['isAdmin']);
+    localStorage.setItem('id_token', resp.data.token);
+    localStorage.setItem('isAdmin', resp.data.isAdmin);
+    this.checkLogin();
    });
-   this.checkLogin();
   }
   checkLogin() {
-    if (localStorage.getItem('isAdmin')) {
+    if (localStorage.getItem('isAdmin') === 'true') {
       this.router.navigate(['dashboard']);
     } else {
       alert('Login With an Admin Account');

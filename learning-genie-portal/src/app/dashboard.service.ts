@@ -6,11 +6,14 @@ import * as devEnv from '../environments/environment';
 import * as prodEnv from '../environments/environment.prod';
 
 const url = (devEnv.environment.production === false ? devEnv.environment.url : prodEnv.environment.url);
-
+let token = localStorage.getItem('id_token').toString();
+if (!token) {
+  token = '';
+}
 const httpOptions = {
   headers: new HttpHeaders({
     'Content-Type': 'application/json',
-    'x-auth':  localStorage.getItem('id_token')
+    'x-auth':  token
   })
 };
 

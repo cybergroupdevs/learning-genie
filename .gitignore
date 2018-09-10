@@ -5,6 +5,7 @@ app/dist
 backend/node_modules/
 
 learning-genie-portal/node_modules/
+learning-genie-portal/dist/
 
 .vscode/
 *.DS_Store
