@@ -16,9 +16,9 @@ var QuestionSchema = new mongoose.Schema({
         required: true
     },
     team: {
-        type: String,
-        required: true,
-        minlength: 1
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Teams',
+        required: true
     }
 })
 QuestionSchema.statics.checkAns = async function (body) {

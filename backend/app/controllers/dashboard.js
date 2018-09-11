@@ -1,4 +1,4 @@
-const {Answer, Question, User} = require('../models');
+const {Answer, Question, User, Team} = require('../models');
 
 const dashboard = {
     getDashData: function (req, res) {

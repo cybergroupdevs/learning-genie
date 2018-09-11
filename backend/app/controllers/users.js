@@ -1,4 +1,4 @@
-const { Answer, Question, User } = require('../models');
+const { Answer, Question, User, Team } = require('../models');
 
 const user = {
     getUser: function (req, res, id) {
@@ -72,7 +72,7 @@ const cb = {
         if (user) {
             user.isAdmin === true
                 ? User
-                    .find({})
+                    .find({}).populate("team")
                     .then((users) => {
                         res.send({ users })
                     })
@@ -99,7 +99,7 @@ const cb = {
                         } else {
                             let total = correct = inCorrect = notAnswered = 0;
                             Question
-                                .count({ team: usr.team })
+                                .count({ team: usr.team }) // convert to array
                                 .then((count, err) => {
                                     total = count;
                                     Answer

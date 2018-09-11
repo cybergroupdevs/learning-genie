@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { answer, question, user, dashboard, authHelper } = require('../controllers');
+const { answer, question, user, dashboard, authHelper, team } = require('../controllers');
 const { User } = require('../models');
 
 let founduser;
@@ -72,6 +72,10 @@ const apiRoutes = function (router, io) {
         dashboard.getDashData(req, res);
     });
 
+    router.get('/teams', (req, res) => {
+        team.getTeams(req, res);
+    });
+    
     return router;
 }
 

@@ -1,6 +1,6 @@
 const {pick} = require('lodash');
 
-const {Answer, Question, User} = require('../models');
+const {Answer, Question, User, Team} = require('../models');
 
 const question = {
     getQuestions: function (req, res) {
