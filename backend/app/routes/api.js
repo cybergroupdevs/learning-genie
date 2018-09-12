@@ -75,6 +75,10 @@ const apiRoutes = function (router, io) {
     router.get('/teams', (req, res) => {
         team.getTeams(req, res);
     });
+
+    router.patch('/user/:id', (req,res) => {
+        team.patchUser(req, res, req.params.id)
+    })
     
     return router;
 }
@@ -95,11 +99,14 @@ function tokenReceived(req, res, error, token) {
             } else {
                 req.session.idtoken = token.token.id_token;
                 req.session.isAdmin = false;
-                let user = new User({ token: req.session.idtoken, email: req.session.email, team: 'abc' })
-                user
-                    .save()
-                    .then((user) => { })
-                    .catch(e => process.logger(e))
+                let user = new User({ token: req.session.idtoken, email: req.session.email});
+                Team.findOne({'teamName':'cygrp'}).then((team)=>{
+                    user.team.push(team);
+                    user
+                        .save()
+                        .then((user) => { })
+                        .catch(e => process.logger(e))
+                })
             }
             res.redirect('/logincomplete')
         })

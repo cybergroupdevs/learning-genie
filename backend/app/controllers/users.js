@@ -1,3 +1,5 @@
+const {pick} = require('lodash');
+
 const { Answer, Question, User, Team } = require('../models');
 
 const user = {
@@ -30,6 +32,17 @@ const user = {
             .findOne({ token })
             .then((user) => {
                 cb.getUsersDataSuccess(req, res, user, id);
+            })
+            .catch((err) => {
+                process.logger(undefined, err);
+            });
+    },
+    patchUser:  function (req, res, id) {
+        const token = req.headers['x-auth'];
+        User
+            .findOne({ token })
+            .then((user) => {
+                cb.patchUserSuccess(req, res, user, id);
             })
             .catch((err) => {
                 process.logger(undefined, err);
@@ -115,6 +128,41 @@ const cb = {
                                                 })
                                         })
                                 });
+                        }
+                    })
+                : res
+                    .status(403)
+                    .send("UnAuthorized");
+        } else {
+            res
+                .status(401)
+                .send();
+            // process.logger(undefined, 'user not found');
+        }
+    },
+    patchUserSuccess: (req, res, user, id) => {
+        if (user) {
+            user.isAdmin === true
+                ? User
+                    .findById(id)
+                    .then((usr) => {
+                        if (!usr) {
+                            res
+                                .status(400)
+                                .send()
+                        } else {
+                            let body = pick(req.body, ['isAdmin', 'team']);
+                                usr.isAdmin = body.isAdmin;
+                                Team.findOne({team}).then((tm)=>{
+                                    user.team.push(tm);
+                                    user
+                                        .save()
+                                        .then((user) => { 
+                                            res.send("Success")
+                                        })
+                                        .catch(e => process.logger(e))
+                                })
+                                    res.send("Success")
                         }
                     })
                 : res
