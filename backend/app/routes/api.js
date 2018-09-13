@@ -77,7 +77,7 @@ const apiRoutes = function (router, io) {
     });
 
     router.patch('/user/:id', (req,res) => {
-        team.patchUser(req, res, req.params.id)
+        user.patchUser(req, res, req.params.id)
     })
     
     return router;

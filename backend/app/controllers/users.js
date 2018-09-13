@@ -107,7 +107,7 @@ const cb = {
                     .then((usr) => {
                         if (!usr) {
                             res
-                                .status(400)
+                                .status(404)
                                 .send();
                         } else {
                             let total = correct = inCorrect = notAnswered = 0;
@@ -148,21 +148,42 @@ const cb = {
                     .then((usr) => {
                         if (!usr) {
                             res
-                                .status(400)
+                                .status(404)
                                 .send()
                         } else {
-                            let body = pick(req.body, ['isAdmin', 'team']);
-                                usr.isAdmin = body.isAdmin;
-                                Team.findOne({team}).then((tm)=>{
-                                    user.team.push(tm);
-                                    user
+                            let action = req.body.action;
+                            switch (action)
+                            {
+                                case 'admin':
+                                    usr.isAdmin = req.body.isAdmin;
+                                    usr
+                                    .save()
+                                    .then((user) => { 
+                                        res.send("Success")
+                                    })
+                                    .catch(e => process.logger(e));
+                                    break;
+                                case 'addTeam':
+                                    Team.findById(req.body.team).then((tm)=>{
+                                        usr.team.push(tm);
+                                        usr
                                         .save()
                                         .then((user) => { 
                                             res.send("Success")
                                         })
-                                        .catch(e => process.logger(e))
-                                })
-                                    res.send("Success")
+                                        .catch(e => process.logger(e));
+                                    })
+                                    break;
+                                case 'removeTeam':
+                                    usr.team.pull(req.body.team);
+                                    usr
+                                    .save()
+                                    .then((user) => { 
+                                        res.send("Success")
+                                    })
+                                    .catch(e => process.logger(e));
+                                    break;
+                            }
                         }
                     })
                 : res
