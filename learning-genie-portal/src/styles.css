@@ -13,6 +13,7 @@ body {
     position: relative;
     color:darkslategrey;
     z-index: 1;
+	max-width: -webkit-fill-available;
 }
 .row{
     margin-left:0.5em; 

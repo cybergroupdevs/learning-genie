@@ -77,9 +77,17 @@ const apiRoutes = function (router, io) {
     });
 
     router.patch('/user/:id', (req,res) => {
-        user.patchUser(req, res, req.params.id)
+        user.patchUser(req, res, req.params.id);
+    })
+
+    router.post('/team', (req, res) => {
+        team.createTeam(req, res);
     })
     
+    router.patch('/team/:id', (req, res) => {
+        team.renameTeam(req, res, req.params.id);
+    })
+
     return router;
 }
 
