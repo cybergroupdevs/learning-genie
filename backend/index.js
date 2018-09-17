@@ -5,10 +5,21 @@ const bodyParser = require('body-parser');
 
 const {socket} = require('./app/sockets');
 const routes = require('./app/routes');
+const { session, sess_secret } = require('./config/config');
+const MongoStore = require('connect-mongo')(session);
 
-const {session} = require('./config/config');
-
-app.use(session);
+app.use(session({
+    secret: sess_secret,
+    resave: false,
+    saveUninitialized: false,
+    store: new MongoStore({
+        url: process.env.MONGODB_URI,
+        ttl: 2 * 24 * 60 * 60, // = 2 days. Default
+        autoRemove: 'native'
+    }),
+    cookie: {
+        httpOnly: false
+    }}));
 
 app.use((req, res, next) => {
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, X-Auth");

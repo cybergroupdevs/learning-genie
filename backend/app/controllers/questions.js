@@ -155,6 +155,7 @@ const cb = {
                 let question = new Question(body)
                 question
                     .save()
+                    .populate('team', 'teamName')
                     .then((question) => {
                         if (!question) {
                             res
@@ -165,7 +166,7 @@ const cb = {
                             res.send({message: 'Question Posted'});
                             process.logger('question emitted');
                             io
-                                .sockets
+                                .to(question.team.teamName)
                                 .emit('newQuestion', question);
                         }
                     })
