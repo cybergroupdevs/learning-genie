@@ -56,6 +56,7 @@ const cb = {
                 ? Question
                     .find({})
                     .sort({'atTime': -1})
+                    .populate('team','teamName')
                     .then((questions) => {
                         if (!questions) {
                             res

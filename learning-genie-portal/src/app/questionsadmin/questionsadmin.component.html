@@ -8,7 +8,11 @@
     <br>
     <input type="text" class="form-control" [(ngModel)]="add_Ques.ques" placeholder="Question">
     <br>
-    <input type="text" class="form-control" [(ngModel)]="add_Ques.team" placeholder="Team">
+    <select class="form-control" [(ngModel)]="add_Ques.team" placeholder="Team">
+        <option *ngFor="let team of teams" [value]="team.id">
+          {{team.teamName}}
+        </option>
+    </select>
     <br>
     <input type="text" class="form-control" [(ngModel)]="add_Ques.keys" placeholder="Keys (Seperate Keys with ',')">
     <br>
@@ -30,7 +34,7 @@
     <tbody>
       <tr *ngFor="let question of questions;index as i">
         <td>{{question.ques}}</td>
-        <td>{{question.team}}</td>
+        <td>{{question.team.teamName}}</td>
         <td>{{question.atTime | date: 'MM-dd-yyyy HH:mm:ss Z' }}</td>
         <td>
           <button class="btn btn-primary" (click)="ansQuesBtn(i,content)">

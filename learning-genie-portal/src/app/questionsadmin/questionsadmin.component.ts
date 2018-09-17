@@ -8,6 +8,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./questionsadmin.component.css']
 })
 export class QuestionsadminComponent implements OnInit {
+  teams = [{id: '1', teamName: 'cygrp'}, {id: '2', teamName: 'india'}];
   isQuesAdd = false;
   isQuesVisible = false;
   questions;
