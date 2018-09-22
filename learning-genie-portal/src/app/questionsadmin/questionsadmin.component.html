@@ -9,7 +9,7 @@
     <input type="text" class="form-control" [(ngModel)]="add_Ques.ques" placeholder="Question">
     <br>
     <select class="form-control" [(ngModel)]="add_Ques.team" placeholder="Team">
-        <option *ngFor="let team of teams" [value]="team.id">
+        <option *ngFor="let team of teams" [value]="team._id">
           {{team.teamName}}
         </option>
     </select>

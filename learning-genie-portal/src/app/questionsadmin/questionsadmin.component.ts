@@ -1,5 +1,6 @@
 import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 import { QuestionsService } from './../questions.service';
+import { TeamsService } from './../teams.service';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -8,7 +9,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./questionsadmin.component.css']
 })
 export class QuestionsadminComponent implements OnInit {
-  teams = [{id: '1', teamName: 'cygrp'}, {id: '2', teamName: 'india'}];
+  teams;
   isQuesAdd = false;
   isQuesVisible = false;
   questions;
@@ -22,7 +23,7 @@ export class QuestionsadminComponent implements OnInit {
   dataFormat = 'json';
   dataSource;
   title = 'Learning Genie';
-  constructor(private questionsService: QuestionsService, private modalService: NgbModal) { }
+  constructor(private teamsService: TeamsService, private questionsService: QuestionsService, private modalService: NgbModal) { }
   addQuesBtn() {
     this.isQuesAdd = !this.isQuesAdd;
     this.isQuesVisible = true;
@@ -87,6 +88,9 @@ export class QuestionsadminComponent implements OnInit {
   }
   ngOnInit() {
     this.quesInit();
+    this.teamsService.getTeams().subscribe((data) => {
+      this.teams = data.teams;
+    });
   }
 
 }

@@ -1,6 +1,6 @@
 const { Router } = require('express');
 const { answer, question, user, dashboard, authHelper, team } = require('../controllers');
-const { User } = require('../models');
+const { User, Team, IndiaEmployee } = require('../models');
 
 let founduser;
 
@@ -100,7 +100,7 @@ function tokenReceived(req, res, error, token) {
         req.session.email = authHelper.getEmailFromIdToken(token.token.id_token);
         User.findOne({
             'email': req.session.email
-        }, function (err, founduser) {
+        }, async function (err, founduser) {
             if (founduser) {
                 req.session.idtoken = founduser.token;
                 req.session.isAdmin = founduser.isAdmin;
@@ -108,13 +108,22 @@ function tokenReceived(req, res, error, token) {
                 req.session.idtoken = token.token.id_token;
                 req.session.isAdmin = false;
                 let user = new User({ token: req.session.idtoken, email: req.session.email});
-                Team.findOne({'teamName':'cygrp'}).then((team)=>{
+                let iemp =await IndiaEmployee.findOne({'E-MAIL': req.session.email});
+                let team;
+                if(iemp) {
+                    team = await Team.findOne({'teamName':'India'});
                     user.team.push(team);
-                    user
-                        .save()
-                        .then((user) => { })
-                        .catch(e => process.logger(e))
-                })
+                }
+                else {
+                    team = await Team.findOne({'teamName':'Dallas'});
+                    user.team.push(team);
+                }
+                team = await Team.findOne({'teamName':'Cygrp'});
+                user.team.push(team);
+                user
+                    .save()
+                    .then((user) => { })
+                    .catch(e => process.logger(e));
             }
             res.redirect('/logincomplete')
         })
