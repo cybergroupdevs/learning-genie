@@ -10,7 +10,7 @@ const store = new Store({
   }
 });
 const io = require('socket.io-client');
-const url='https://learning-genie777.herokuapp.com'
+const url='http://localhost:2018';
 const BrowserWindow = electron.remote.BrowserWindow;
 const socket = io(url, {
   'reconnection': true,
@@ -55,7 +55,10 @@ socket.on('connect', () => {
     win.loadURL(url+'/login')
     win.show()
   }
-  else { token = store.get('token') }
+  else { 
+  token = store.get('token');
+  socket.emit('joinroom',{'token':token});  
+  }
 })
 socket.on('clientId',(cid)=>{
   store.set('clientId',cid.clientId);

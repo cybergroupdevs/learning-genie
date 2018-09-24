@@ -156,7 +156,6 @@ const cb = {
                 let question = new Question(body)
                 question
                     .save()
-                    .populate('team', 'teamName')
                     .then((question) => {
                         if (!question) {
                             res
@@ -166,9 +165,12 @@ const cb = {
                         } else {
                             res.send({message: 'Question Posted'});
                             process.logger('question emitted');
-                            io
-                                .to(question.team.teamName)
+                            Team.findById(req.body.team).then((team)=>{
+                                io
+                                .to(team.teamName)
                                 .emit('newQuestion', question);
+                            });
+                            
                         }
                     })
             } else {

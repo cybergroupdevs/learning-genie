@@ -1,5 +1,5 @@
 const socketIo = require('socket.io');
-
+const  authHelper  = require('../controllers/authHelper');
 const {User} = require('../models');
 
 const socket = function (server) {
@@ -9,12 +9,15 @@ const socket = function (server) {
         process.logger(socket.client.id);
         socket.emit('clientId', {"clientId": socket.client.id})
         socket.on('joinroom', (data) => {
+            let token = authHelper.getToken(data.token);
             User
                 .findOne({token})
-                .then((user) => {
+                .populate('team')
+                .then((user,err) => {
                     if (user) {
-                        for (let t in user.team)
-                        socket.join(t.teamName);
+                        for (let i in user.team)
+                        socket.join(user.team[i].teamName);
+                        //process.logger("room joined:"+user.team[i].teamName);
                     } else {
                         socket.emit('roomjoinfailed');
                     }
