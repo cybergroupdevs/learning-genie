@@ -75,7 +75,7 @@ app.on('window-all-closed', (e) => {
   app.relaunch();
 })
 app.on('quit',(e)=>{
-  e.preventDefault();
+  //e.preventDefault();
   app.relaunch();
 })
 app.on('activate', () => {
