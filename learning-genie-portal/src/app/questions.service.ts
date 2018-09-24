@@ -6,7 +6,7 @@ import * as devEnv from '../environments/environment';
 import * as prodEnv from '../environments/environment.prod';
 
 const url = (devEnv.environment.production === false ? devEnv.environment.url : prodEnv.environment.url);
-let token = localStorage.getItem('id_token').toString();
+let token = localStorage.getItem('id_token');
 if (!token) {
   token = '';
 }

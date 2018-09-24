@@ -1,4 +1,6 @@
-const { Answer, Question, User } = require('../models');
+const {pick} = require('lodash');
+
+const { Answer, Question, User, Team } = require('../models');
 
 const user = {
     getUser: function (req, res, id) {
@@ -30,6 +32,17 @@ const user = {
             .findOne({ token })
             .then((user) => {
                 cb.getUsersDataSuccess(req, res, user, id);
+            })
+            .catch((err) => {
+                process.logger(undefined, err);
+            });
+    },
+    patchUser:  function (req, res, id) {
+        const token = req.headers['x-auth'];
+        User
+            .findOne({ token })
+            .then((user) => {
+                cb.patchUserSuccess(req, res, user, id);
             })
             .catch((err) => {
                 process.logger(undefined, err);
@@ -72,7 +85,7 @@ const cb = {
         if (user) {
             user.isAdmin === true
                 ? User
-                    .find({})
+                    .find({}).populate("team")
                     .then((users) => {
                         res.send({ users })
                     })
@@ -94,12 +107,12 @@ const cb = {
                     .then((usr) => {
                         if (!usr) {
                             res
-                                .status(400)
+                                .status(404)
                                 .send();
                         } else {
                             let total = correct = inCorrect = notAnswered = 0;
                             Question
-                                .count({ team: usr.team })
+                                .count({ team: usr.team }) // convert to array
                                 .then((count, err) => {
                                     total = count;
                                     Answer
@@ -115,6 +128,62 @@ const cb = {
                                                 })
                                         })
                                 });
+                        }
+                    })
+                : res
+                    .status(403)
+                    .send("UnAuthorized");
+        } else {
+            res
+                .status(401)
+                .send();
+            // process.logger(undefined, 'user not found');
+        }
+    },
+    patchUserSuccess: (req, res, user, id) => {
+        if (user) {
+            user.isAdmin === true
+                ? User
+                    .findById(id)
+                    .then((usr) => {
+                        if (!usr) {
+                            res
+                                .status(404)
+                                .send()
+                        } else {
+                            let action = req.body.action;
+                            switch (action)
+                            {
+                                case 'admin':
+                                    usr.isAdmin = req.body.isAdmin;
+                                    usr
+                                    .save()
+                                    .then((user) => { 
+                                        res.send("Success")
+                                    })
+                                    .catch(e => process.logger(e));
+                                    break;
+                                case 'addTeam':
+                                    Team.findById(req.body.team).then((tm)=>{
+                                        usr.team.push(tm);
+                                        usr
+                                        .save()
+                                        .then((user) => { 
+                                            res.send("Success")
+                                        })
+                                        .catch(e => process.logger(e));
+                                    })
+                                    break;
+                                case 'removeTeam':
+                                    usr.team.pull(req.body.team);
+                                    usr
+                                    .save()
+                                    .then((user) => { 
+                                        res.send("Success")
+                                    })
+                                    .catch(e => process.logger(e));
+                                    break;
+                            }
                         }
                     })
                 : res

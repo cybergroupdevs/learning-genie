@@ -12,7 +12,11 @@ const store = new Store({
 const io = require('socket.io-client');
 const url='https://learning-genie777.herokuapp.com'
 const BrowserWindow = electron.remote.BrowserWindow;
-const socket = io(url);
+const socket = io(url, {
+  'reconnection': true,
+  'reconnectionDelay': 500,
+  'reconnectionAttempts': 1000
+});
 const { remote } = require('electron')
 const msgs = document.getElementById('msg-bubble');
 const msgtxt = document.getElementById('msg');
@@ -24,14 +28,14 @@ let ques;
 let token;
 let newNotification = '';
 
-socket.on('error', function() {
-  // wait 5 seconds then try again
-  if (!socket.socket.connected) {
-    setTimeout(() => {
-    socket.connect(url);
-    }, 3000)
-  }
-});
+// socket.on('error', function() {
+//   // wait 5 seconds then try again
+//   if (!socket.socket.connected) {
+//     setTimeout(() => {
+//     socket.connect(url);
+//     }, 3000)
+//   }
+// });
 socket.on('connect', () => {
   console.log("connected to server")
   currentWin.hide();

@@ -17,13 +17,11 @@ var UserSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    team: {
-        required: true,
-        type: String,
-        required: true,
-        minlength: 1,
-        trim: true
-    }
+    team: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Teams',
+        required: true
+    }]
 })
 
 UserSchema.methods.findUser = async function (token) {

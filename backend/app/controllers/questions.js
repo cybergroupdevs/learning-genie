@@ -1,6 +1,6 @@
 const {pick} = require('lodash');
 
-const {Answer, Question, User} = require('../models');
+const {Answer, Question, User, Team} = require('../models');
 
 const question = {
     getQuestions: function (req, res) {
@@ -56,6 +56,7 @@ const cb = {
                 ? Question
                     .find({})
                     .sort({'atTime': -1})
+                    .populate('team','teamName')
                     .then((questions) => {
                         if (!questions) {
                             res
@@ -155,6 +156,7 @@ const cb = {
                 let question = new Question(body)
                 question
                     .save()
+                    .populate('team', 'teamName')
                     .then((question) => {
                         if (!question) {
                             res
@@ -165,7 +167,7 @@ const cb = {
                             res.send({message: 'Question Posted'});
                             process.logger('question emitted');
                             io
-                                .sockets
+                                .to(question.team.teamName)
                                 .emit('newQuestion', question);
                         }
                     })

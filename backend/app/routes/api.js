@@ -1,6 +1,6 @@
 const { Router } = require('express');
-const { answer, question, user, dashboard, authHelper } = require('../controllers');
-const { User } = require('../models');
+const { answer, question, user, dashboard, authHelper, team } = require('../controllers');
+const { User, Team, IndiaEmployee } = require('../models');
 
 let founduser;
 
@@ -72,6 +72,22 @@ const apiRoutes = function (router, io) {
         dashboard.getDashData(req, res);
     });
 
+    router.get('/teams', (req, res) => {
+        team.getTeams(req, res);
+    });
+
+    router.patch('/user/:id', (req,res) => {
+        user.patchUser(req, res, req.params.id);
+    })
+
+    router.post('/team', (req, res) => {
+        team.createTeam(req, res);
+    })
+    
+    router.patch('/team/:id', (req, res) => {
+        team.renameTeam(req, res, req.params.id);
+    })
+
     return router;
 }
 
@@ -84,18 +100,30 @@ function tokenReceived(req, res, error, token) {
         req.session.email = authHelper.getEmailFromIdToken(token.token.id_token);
         User.findOne({
             'email': req.session.email
-        }, function (err, founduser) {
+        }, async function (err, founduser) {
             if (founduser) {
                 req.session.idtoken = founduser.token;
                 req.session.isAdmin = founduser.isAdmin;
             } else {
                 req.session.idtoken = token.token.id_token;
                 req.session.isAdmin = false;
-                let user = new User({ token: req.session.idtoken, email: req.session.email, team: 'abc' })
+                let user = new User({ token: req.session.idtoken, email: req.session.email});
+                let iemp =await IndiaEmployee.findOne({'E-MAIL': req.session.email});
+                let team;
+                if(iemp) {
+                    team = await Team.findOne({'teamName':'India'});
+                    user.team.push(team);
+                }
+                else {
+                    team = await Team.findOne({'teamName':'Dallas'});
+                    user.team.push(team);
+                }
+                team = await Team.findOne({'teamName':'Cygrp'});
+                user.team.push(team);
                 user
                     .save()
                     .then((user) => { })
-                    .catch(e => process.logger(e))
+                    .catch(e => process.logger(e));
             }
             res.redirect('/logincomplete')
         })

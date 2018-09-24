@@ -1,6 +1,4 @@
-const clientId = '00466414-78cb-46f9-a8f7-3a366b52293e';
-const clientSecret = 'bqmqRFH6239%-jwyCSQL8!$';
-const redirectUri = 'https://learning-genie777.herokuapp.com/authorize';
+const {clientId , clientSecret, redirectUri } = require('../../config/config')
 const scopes = ['openid', 'profile', 'offline_access'];
 
 const credentials = {

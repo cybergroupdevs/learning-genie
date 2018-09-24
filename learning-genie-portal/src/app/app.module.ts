@@ -18,6 +18,7 @@ import { UsersComponent } from './users/users.component';
 import { UsersService } from './users.service';
 import { QuestionsadminComponent } from './questionsadmin/questionsadmin.component';
 import { QuestionsService } from './questions.service';
+import { TeamsService } from './teams.service';
 import { DashboardComponent } from './dashboard/dashboard.component';
 
 FusionChartsModule.fcRoot(FusionCharts, Charts, FintTheme);
@@ -38,7 +39,7 @@ FusionChartsModule.fcRoot(FusionCharts, Charts, FintTheme);
     AppRoutingModule,
     NgbModule.forRoot(),
   ],
-  providers: [ UsersService, QuestionsService, NavBarComponent, DashboardService],
+  providers: [ UsersService, QuestionsService, NavBarComponent, DashboardService, TeamsService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

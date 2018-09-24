@@ -13,7 +13,7 @@
         <tbody *ngFor="let user of users;index as i">
           <tr>
             <td>{{ user.email }}</td>
-            <td>{{ user.team }}</td>
+            <td><div  *ngFor="let t of user.team">{{ t.teamName }}&nbsp;</div></td>
             <td>{{ user.isAdmin }}</td>
             <td>
               <button (click)="ansUsers(i,content)" class="btn btn-primary">

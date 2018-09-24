@@ -13,7 +13,8 @@ const socket = function (server) {
                 .findOne({token})
                 .then((user) => {
                     if (user) {
-                        socket.join(user.team)
+                        for (let t in user.team)
+                        socket.join(t.teamName);
                     } else {
                         socket.emit('roomjoinfailed');
                     }

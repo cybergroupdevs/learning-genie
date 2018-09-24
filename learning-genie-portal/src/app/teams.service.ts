@@ -16,16 +16,17 @@ const httpOptions = {
     'x-auth':  token
   })
 };
+
 @Injectable()
-export class UsersService {
+export class TeamsService {
   constructor(private http: HttpClient) { }
-  getUsers(): Observable<any> {
-    return this.http.get(url + 'users', httpOptions).map( resp => resp);
+  getTeams(): Observable<any> {
+    return this.http.get(url + 'teams', httpOptions).map( resp => resp);
   }
-  getAnswers(id): Observable<any> {
-    return this.http.get(url + 'users/' + id, httpOptions).map(resp => resp);
+  postTeam(data): Observable<any> {
+    return this.http.post(url + 'team', data, httpOptions).map(resp => resp = resp['message']);
   }
-  getUsersData(id): Observable<any> {
-    return this.http.get(url + 'usersdata/' + id, httpOptions).map(resp => resp);
+  getUsersData(id, data): Observable<any> {
+    return this.http.patch(url + 'team/' + id, data, httpOptions).map(resp => resp = resp['message']);
   }
 }
