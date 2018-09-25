@@ -45,7 +45,8 @@ socket.on('connect', () => {
     win.on('close', function () {
       axios.get(url+'/getuser').then((data) => {
         token = JSON.stringify(data.data.token);
-        store.set('token', JSON.stringify(token))
+        store.set('token', JSON.stringify(token));
+        socket.emit('joinroom',{'token':store.get('token')});  
       }).catch((e) => {
         alert(e.message)
         win.close();

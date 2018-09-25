@@ -35,8 +35,8 @@ const subAns = (answer) => {
         }).then((res) => {
             if (res.status == 200) {
                 alert("Your Response is Recorded :)");
-                currentWin.close();
-                store.set('question', null)
+                store.set('question', null);
+                currentWin.close();               
             }
             else {
                 alert("Something Went Wrong :(")
