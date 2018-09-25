@@ -10,7 +10,7 @@ const store = new Store({
   }
 });
 const io = require('socket.io-client');
-const url='http://localhost:2018';
+const url='https://learning-genie777.herokuapp.com';
 const BrowserWindow = electron.remote.BrowserWindow;
 const socket = io(url, {
   'reconnection': true,
