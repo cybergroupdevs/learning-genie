@@ -12,6 +12,17 @@ const team = {
                 process.logger(undefined, err);
             });
     },
+	 getTeamId: function (req, res,id) {
+        const token = req.headers['x-auth'];
+        User
+            .findOne({ token })
+            .then((user) => {
+                cb.getTeamSuccess(res, user, id);
+            })
+            .catch((err) => {
+                process.logger(undefined, err);
+            });
+    },
     createTeam: function (req, res) {
         const token = req.headers['x-auth'];
         User
@@ -55,6 +66,36 @@ const cb = {
             // process.logger(undefined, 'user not found');
         }
     },
+	
+	getTeamSuccess: function (res, user,id) {
+        if (user) {
+            user.isAdmin === true
+                ? Team
+                    .findById(id)
+                    .then((team) => {
+                        if (!team) {
+                            res
+                                .status(400)
+                                .send();
+                        } else {
+                            User
+                                .find({team: id}).select({'email': 1, 'team': 1})
+                                .then(users => {
+                                    res.send(users);
+                                });
+                        }
+                    }).catch((e) => { console.log(e) })
+                : res
+                    .status(403)
+                    .send("UnAuthorized");
+        } else {
+            res
+                .status(401)
+                .send();
+            // process.logger(undefined, 'user not found');
+        }
+    },
+	
     createTeamSuccess: function (req, res, user) {
         if (user) {
             if (user.isAdmin === true) {

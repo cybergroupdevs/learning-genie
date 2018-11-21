@@ -1,3 +1,4 @@
+import { TeamsComponent } from './teams/teams.component';
 import { QuestionsadminComponent } from './questionsadmin/questionsadmin.component';
 import { UsersComponent } from './users/users.component';
 import { LoginComponent } from './login/login.component';
@@ -10,7 +11,8 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'users', component: UsersComponent },
   { path: 'questions', component: QuestionsadminComponent },
-  { path: 'dashboard', component: DashboardComponent}
+  { path: 'dashboard', component: DashboardComponent},
+  { path: 'teams', component: TeamsComponent}
 ];
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

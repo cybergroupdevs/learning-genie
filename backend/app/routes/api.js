@@ -87,7 +87,9 @@ const apiRoutes = function (router, io) {
     router.patch('/team/:id', (req, res) => {
         team.renameTeam(req, res, req.params.id);
     })
-
+    router.get('/team/:id', (req, res) => {
+        team.getTeamId(req, res, req.params.id);
+    });
     return router;
 }
 
