@@ -159,7 +159,7 @@ const cb = {
                                     usr
                                     .save()
                                     .then((user) => { 
-                                        res.send("Success")
+                                        res.send({ message: 'Success' })
                                     })
                                     .catch(e => process.logger(e));
                                     break;
@@ -169,7 +169,7 @@ const cb = {
                                         usr
                                         .save()
                                         .then((user) => { 
-                                            res.send("Success")
+                                            res.send({ message: 'Success' })
                                         })
                                         .catch(e => process.logger(e));
                                     })
@@ -179,7 +179,7 @@ const cb = {
                                     usr
                                     .save()
                                     .then((user) => { 
-                                        res.send("Success")
+                                        res.send({ message: 'Success' })
                                     })
                                     .catch(e => process.logger(e));
                                     break;

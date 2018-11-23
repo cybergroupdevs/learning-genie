@@ -156,19 +156,20 @@ const cb = {
                 let question = new Question(body)
                 question
                     .save()
-                    .populate('team', 'teamName')
-                    .then((question) => {
-                        if (!question) {
+                    .then((resp) => {
+                        if (!resp) {
                             res
                                 .status(404)
                                 .send();
                             res.end();
                         } else {
                             res.send({message: 'Question Posted'});
+                            Team.findById(question.team).then((t)=>{
                             process.logger('question emitted');
                             io
-                                .to(question.team.teamName)
+                                .to(t.teamName)
                                 .emit('newQuestion', question);
+                            });
                         }
                     })
             } else {

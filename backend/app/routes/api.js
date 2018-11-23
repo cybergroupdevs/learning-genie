@@ -66,7 +66,7 @@ const apiRoutes = function (router, io) {
 
     router.get('/usersdata/:id', (req, res) => {
         user.getUsersData(req, res, req.params.id);
-    })
+    });
 
     router.get('/dashdata', (req, res) => {
         dashboard.getDashData(req, res);
@@ -78,17 +78,23 @@ const apiRoutes = function (router, io) {
 
     router.patch('/user/:id', (req,res) => {
         user.patchUser(req, res, req.params.id);
-    })
+    });
 
     router.post('/team', (req, res) => {
         team.createTeam(req, res);
-    })
+    });
     
     router.patch('/team/:id', (req, res) => {
         team.renameTeam(req, res, req.params.id);
-    })
+    });
     router.get('/team/:id', (req, res) => {
         team.getTeamId(req, res, req.params.id);
+    });
+    router.get('/team/add/:id', (req, res) => {
+        team.getNonMembers(req, res, req.params.id)
+    });
+    router.get('/teamdata/:id', (req, res) => {
+        team.getTeamsData(req, res, req.params.id);
     });
     return router;
 }

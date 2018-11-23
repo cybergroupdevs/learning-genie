@@ -1,3 +1,4 @@
+<div id="cover-spin" *ngIf="ShowSpinner"></div>
 <div class="glass">
   <div>
     <div class="table-responsive">
@@ -17,6 +18,9 @@
               </button>
               <button (click)="makegraph(i,graphs)" class="btn btn-primary">
                 View Graphs
+              </button>
+              <button (click)="addMemeber(i,contentAddMember)" class="btn btn-primary">
+                Add Members
               </button>
             </td>
           </tr>
@@ -41,7 +45,7 @@
             <th>Options</th>
           </tr>
         </thead>
-        <tbody *ngFor="let member of users">
+        <tbody *ngFor="let member of users;index as i">
           <tr>
             <td>{{ member.email }}</td>
             <td><button (click)="removeUser(i)" class="btn btn-primary">
@@ -56,9 +60,40 @@
     <button type="button" class="btn btn-outline-dark" (click)="c('Close click')">Close</button>
   </div>
 </ng-template>
+<ng-template #contentAddMember let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title">Users</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">×</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="table-responsive">
+      <table class="table">
+        <thead class="thead-dark">
+          <tr>
+            <th>E-Mail</th>
+            <th>Options</th>
+          </tr>
+        </thead>
+        <tbody *ngFor="let member of users;index as i">
+          <tr>
+            <td>{{ member.email }}</td>
+            <td><button (click)="addUser(i)" class="btn btn-primary">
+              Add
+            </button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="c('Close click')">Close</button>
+  </div>
+</ng-template>
 <ng-template #graphs let-c="close" let-d="dismiss">
   <div class="modal-header">
-    <h4 class="modal-title">Members</h4>
+    <h4 class="modal-title">Team Graphs</h4>
     <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
       <span aria-hidden="true">×</span>
     </button>
