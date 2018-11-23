@@ -45,8 +45,10 @@ export class QuestionsadminComponent implements OnInit {
     });
   }
   quesInit() {
+    this.ShowSpinner = true;
     this.questionsService.getQuestions().subscribe((data) => {
       this.questions = data.questions;
+      this.ShowSpinner = false;
     });
   }
   addQues() {
