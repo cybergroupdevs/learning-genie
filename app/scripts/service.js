@@ -10,7 +10,7 @@ const store = new Store({
   }
 });
 const io = require('socket.io-client');
-const url='https://learning-genie777.herokuapp.com'
+const url='https://learning-genie777.herokuapp.com';
 const BrowserWindow = electron.remote.BrowserWindow;
 const socket = io(url, {
   'reconnection': true,
@@ -45,7 +45,8 @@ socket.on('connect', () => {
     win.on('close', function () {
       axios.get(url+'/getuser').then((data) => {
         token = JSON.stringify(data.data.token);
-        store.set('token', JSON.stringify(token))
+        store.set('token', JSON.stringify(token));
+        socket.emit('joinroom',{'token':store.get('token')});  
       }).catch((e) => {
         alert(e.message)
         win.close();
@@ -55,7 +56,10 @@ socket.on('connect', () => {
     win.loadURL(url+'/login')
     win.show()
   }
-  else { token = store.get('token') }
+  else { 
+  token = store.get('token');
+  socket.emit('joinroom',{'token':token});  
+  }
 })
 socket.on('clientId',(cid)=>{
   store.set('clientId',cid.clientId);
