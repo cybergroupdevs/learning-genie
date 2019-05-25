@@ -23,8 +23,10 @@ export class QuestionsadminComponent implements OnInit {
   dataFormat = 'json';
   dataSource;
   title = 'Learning Genie';
+  ShowSpinner = false;
   constructor(private teamsService: TeamsService, private questionsService: QuestionsService, private modalService: NgbModal) { }
   addQuesBtn() {
+    this.ShowSpinner = true;
     this.isQuesAdd = !this.isQuesAdd;
     this.isQuesVisible = true;
     this.add_Ques = {
@@ -32,32 +34,39 @@ export class QuestionsadminComponent implements OnInit {
       team: null,
       keys: null
     };
+    this.ShowSpinner = false;
   }
   ansQuesBtn(index, content) {
+    this.ShowSpinner = true;
     this.questionsService.getAnswers(this.questions[index]._id).subscribe((data) => {
       this.ansOfQues = data;
       this.modalService.open(content, { size: 'lg' });
+      this.ShowSpinner = false;
     });
   }
   quesInit() {
+    this.ShowSpinner = true;
     this.questionsService.getQuestions().subscribe((data) => {
       this.questions = data.questions;
+      this.ShowSpinner = false;
     });
   }
   addQues() {
-    let data = {
+    this.ShowSpinner = true;
+    const data = {
       'ques': this.add_Ques.ques,
       'team': this.add_Ques.team,
       'keys': this.add_Ques.keys,
     };
     this.questionsService.postQuestion(data).subscribe((resp) => {
-      alert(JSON.stringify(resp));
       this.quesInit();
       this.isQuesAdd = false;
       this.isQuesVisible = false;
+      this.ShowSpinner = false;
     });
   }
   makegraph(index, graphs) {
+    this.ShowSpinner = true;
     this.questionsService.getQuestionsData(this.questions[index]._id).subscribe((data) => {
       this.dataSource = {
         'chart': {
@@ -84,13 +93,15 @@ export class QuestionsadminComponent implements OnInit {
         ]
       };
       this.modalService.open(graphs, { size: 'lg' });
+      this.ShowSpinner = false;
     });
   }
   ngOnInit() {
+    this.ShowSpinner = true;
     this.quesInit();
     this.teamsService.getTeams().subscribe((data) => {
       this.teams = data.teams;
+      this.ShowSpinner = false;
     });
   }
-
 }

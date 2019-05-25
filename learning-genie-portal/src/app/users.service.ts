@@ -28,4 +28,10 @@ export class UsersService {
   getUsersData(id): Observable<any> {
     return this.http.get(url + 'usersdata/' + id, httpOptions).map(resp => resp);
   }
+  removeTeam(id, tid): Observable<any> {
+    return this.http.patch(url + 'user/' + id, {'action': 'removeTeam', 'team': tid}, httpOptions).map(resp => resp);
+  }
+  addTeam(id, tid): Observable<any> {
+    return this.http.patch(url + 'user/' + id, {'action': 'addTeam', 'team': tid}, httpOptions).map(resp => resp);
+  }
 }

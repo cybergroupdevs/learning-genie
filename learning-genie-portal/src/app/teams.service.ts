@@ -23,10 +23,19 @@ export class TeamsService {
   getTeams(): Observable<any> {
     return this.http.get(url + 'teams', httpOptions).map( resp => resp);
   }
+  getTeam(id): Observable<any> {
+    return this.http.get(url + 'team/' + id, httpOptions).map( resp => resp);
+  }
+  getNonMembers(id): Observable<any> {
+    return this.http.get(url + 'team/add/' + id, httpOptions).map( resp => resp);
+  }
   postTeam(data): Observable<any> {
     return this.http.post(url + 'team', data, httpOptions).map(resp => resp = resp['message']);
   }
-  getUsersData(id, data): Observable<any> {
+  patchTeam(id, data): Observable<any> {
     return this.http.patch(url + 'team/' + id, data, httpOptions).map(resp => resp = resp['message']);
+  }
+  getTeamData(id): Observable<any> {
+    return this.http.get(url + 'teamdata/' + id, httpOptions).map( resp => resp);
   }
 }

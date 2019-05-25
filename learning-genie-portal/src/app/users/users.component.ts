@@ -17,20 +17,26 @@ export class UsersComponent implements OnInit {
   dataFormat = 'json';
   dataSource;
   title = 'Learning Genie';
+  ShowSpinner = false;
   constructor(private usersService: UsersService, private modalService: NgbModal) {
   }
   initUsers() {
+    this.ShowSpinner = true;
     this.usersService.getUsers().subscribe(data => {
       this.users = data.users;
+      this.ShowSpinner = false;
     });
   }
   ansUsers(index, content) {
+    this.ShowSpinner = true;
     this.usersService.getAnswers(this.users[index]._id).subscribe((data) => {
       this.ansOfUser = data;
       this.modalService.open(content, { size: 'lg' });
+      this.ShowSpinner = false;
     });
   }
   makegraph(index, graphs) {
+    this.ShowSpinner = true;
     this.usersService.getUsersData(this.users[index]._id).subscribe((data) => {
       this.dataSource = {
         'chart': {
@@ -57,6 +63,7 @@ export class UsersComponent implements OnInit {
         ]
       };
       this.modalService.open(graphs, { size: 'lg' });
+      this.ShowSpinner = false;
     });
   }
   ngOnInit() {

@@ -20,6 +20,7 @@ import { QuestionsadminComponent } from './questionsadmin/questionsadmin.compone
 import { QuestionsService } from './questions.service';
 import { TeamsService } from './teams.service';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { TeamsComponent } from './teams/teams.component';
 
 FusionChartsModule.fcRoot(FusionCharts, Charts, FintTheme);
 @NgModule({
@@ -30,6 +31,7 @@ FusionChartsModule.fcRoot(FusionCharts, Charts, FintTheme);
     QuestionsadminComponent,
     LoginComponent,
     DashboardComponent,
+    TeamsComponent,
   ],
   imports: [
     BrowserModule,

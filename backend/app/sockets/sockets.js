@@ -13,18 +13,17 @@ const socket = function (server) {
             User
                 .findOne({token})
                 .populate('team')
-                .then((user,err) => {
+                .then((user) => {
                     if (user) {
-                        for (let i in user.team)
-                        socket.join(user.team[i].teamName);
-                        //process.logger("room joined:"+user.team[i].teamName);
+                        for (let t in user.team)
+                        socket.join(t.teamName);
                     } else {
                         socket.emit('roomjoinfailed');
                     }
                 })
         })
         socket.on('disconnect', function (req, res) {
-            // req.session.destroy();
+             req.session.destroy();
         });
     });
 

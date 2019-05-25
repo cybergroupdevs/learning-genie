@@ -14,8 +14,10 @@ export class DashboardComponent implements OnInit {
   dataFormat = 'json';
   dataSource;
   title = 'Learning Genie';
+  ShowSpinner = false;
   constructor(private dashboardServices: DashboardService ) { }
   makegraph() {
+    this.ShowSpinner = true;
     this.dashboardServices.getGraphData().subscribe((data) => {
       this.dataSource = {
         'chart': {
@@ -41,6 +43,7 @@ export class DashboardComponent implements OnInit {
           }
         ]
       };
+      this.ShowSpinner = false;
     });
   }
 
