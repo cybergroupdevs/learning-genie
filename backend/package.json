@@ -21,7 +21,7 @@
     "express-session": "^1.15.6",
     "lodash": "^4.17.5",
     "mongodb": "^3.0.4",
-    "mongoose": "^5.0.9",
+    "mongoose": "^5.7.5",
     "redis": "^2.8.0",
     "simple-oauth2": "^1.5.2",
     "socket.io": "^2.0.4"
