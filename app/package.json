@@ -30,7 +30,7 @@
   "dependencies": {
     "auto-launch": "^5.0.5",
     "axios": "^0.18.0",
-    "bootstrap": "^4.1.0",
+    "bootstrap": "^4.3.1",
     "fs": "0.0.1-security",
     "jquery": "^3.3.1",
     "popper.js": "^1.14.3",
