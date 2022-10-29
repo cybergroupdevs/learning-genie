@@ -24,7 +24,7 @@
     "mongoose": "^5.0.9",
     "redis": "^2.8.0",
     "simple-oauth2": "^1.5.2",
-    "socket.io": "^2.0.4"
+    "socket.io": "^2.5.0"
   },
   "devDependencies": {
     "ndb": "^1.0.24"
